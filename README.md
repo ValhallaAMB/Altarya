@@ -21,6 +21,6 @@ I ran `npm run reset-project` to get a fresher start.
 ## Extra resources
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial, creating a cross-platform app.
 - [NativeWind documentation](https://www.nativewind.dev/overview/)
-- [Great YouTube video](https://www.nativewind.dev/overview/) by [JavaScript Mastery](https://www.youtube.com/@javascriptmastery)
+- [Great YouTube video](https://www.nativewind.dev/overview/) by [JavaScript Mastery](https://www.youtube.com/@javascriptmastery). I highly recommend checking him out
