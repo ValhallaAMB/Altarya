@@ -1,4 +1,10 @@
-import { View, Text, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -24,8 +30,13 @@ const FormField = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View className={`gap-y-3 ${extraStyles}`}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={55}
+      className={`gap-y-3 ${extraStyles}`}
+    >
       <Text className="text-lg text-white ms-1">{title}</Text>
+
       <View className="items-center flex flex-row w-full h-16 px-5 rounded-lg bg-slate-800 border-2 border-blue-600 ">
         <TextInput
           className="flex-1 text-white"
@@ -46,7 +57,7 @@ const FormField = ({
           />
         )}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
