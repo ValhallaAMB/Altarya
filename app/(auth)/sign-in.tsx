@@ -1,10 +1,10 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 const SignUp = () => {
   const [form, setForm] = useState<{ email: string; password: string }>({
@@ -56,6 +56,11 @@ const SignUp = () => {
               Sign Up
             </Link>
           </View>
+          
+          <TouchableOpacity className="justify-center flex-row mt-4" onPress={() => router.push("/(tabs)/profile")}>
+            <Text className="text-white">Click to go to Profile</Text>
+          </TouchableOpacity>
+
         </View>
       </ScrollView>
     </SafeAreaView>
