@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
-
+import { StatusBar } from "expo-status-bar";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const TabsLayout = () => {
@@ -16,8 +16,9 @@ const TabsLayout = () => {
             backgroundColor: "#161616",
             // borderTopColor: "red",
             borderTopWidth: 1,
-            height: 60,
+            height: 80,
           },
+          headerShown: false,
         }}
       >
         <Tabs.Screen
@@ -70,6 +71,8 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+
+      <StatusBar backgroundColor="#161616" style="light" />
     </>
   );
 };
