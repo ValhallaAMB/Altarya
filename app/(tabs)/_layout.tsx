@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -14,9 +14,9 @@ const TabsLayout = () => {
           headerShadowVisible: false,
           tabBarStyle: {
             backgroundColor: "#161616",
-            // borderTopColor: "red",
+            borderTopColor: "#333333",
             borderTopWidth: 1,
-            height: 80,
+            height: Platform.OS === "ios" ? 80 : 70,
           },
           headerShown: false,
         }}
