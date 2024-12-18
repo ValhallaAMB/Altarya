@@ -26,10 +26,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(()=>{
-
-  })
-
   return (
     <SafeAreaView className="bg-[#161616] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
@@ -55,21 +51,21 @@ const Profile = () => {
         <View className="items-left justify-top px-4 mt-2  mx-4">
 
           <TextInput 
-            className="text-white mt-10 py-3 px-2 rounded-2xl"
+            className="bg-white text-black mt-10 py-3 px-2 rounded-2xl"
             autoCorrect={false}
             autoCapitalize="words"
             value={username}
             onChangeText={(newUsername) => setUsername(newUsername)}
-            style={{borderColor: "white", borderWidth: 1,  }}
+            // style={{borderColor: "black", borderWidth: 1, }}
           />
           
           <TextInput 
-            className="text-white my-10 py-3 px-2 rounded-2xl"
+            className="bg-white text-black my-10 py-3 px-2 rounded-2xl"
             autoCorrect={false}
             autoCapitalize="none"
             value={email}
             onChangeText={(newEmail) => setEmail(newEmail)}
-            style={{borderColor: "white", borderWidth: 1,  }}
+            // style={{borderColor: "", borderWidth: 1,  }}
           />
           {/* <Text className="text-white py-10">Tagline</Text> */}
         </View>
