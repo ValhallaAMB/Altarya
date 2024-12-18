@@ -84,7 +84,7 @@ const Profile = () => {
           handlePress={ function (): void {throw new Error('Function not implemented.');} } 
           isLoading={false}  
           textStyle="text-white text-md"
-          containerStyle="mt-10 mx-5 py-[10px] bg-blue-500"        
+          containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"        
           />
         </View>
 
