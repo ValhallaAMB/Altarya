@@ -16,6 +16,7 @@ const Chats = () => {
             <Text className="text-5xl font-bold text-white">Chats</Text>
             <View className="ms-auto me-5">
               <CustomModal
+                title="New Chat"
                 modelTitle="Start a new chat"
                 value={modalText}
                 modalVisible={modalVisible}

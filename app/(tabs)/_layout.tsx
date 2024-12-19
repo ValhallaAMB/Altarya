@@ -40,22 +40,6 @@ const TabsLayout = () => {
         />
 
         <Tabs.Screen
-          name="group-chats"
-          options={{
-            title: "Group Chats",
-            tabBarIcon: ({ color, focused }) => {
-              return (
-                <Ionicons
-                  size={28}
-                  name={focused ? "chatbubbles" : "chatbubbles-outline"}
-                  color={color}
-                />
-              );
-            },
-          }}
-        />
-
-        <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
