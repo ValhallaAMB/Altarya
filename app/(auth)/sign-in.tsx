@@ -61,6 +61,10 @@ const SignUp = () => {
             <Text className="text-white">Click to go to Profile</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity className="justify-center flex-row mt-4" onPress={() => router.push("/chatroom")}>
+            <Text className="text-white">Click to go to a chat</Text>
+          </TouchableOpacity>
+
         </View>
       </ScrollView>
     </SafeAreaView>
