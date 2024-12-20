@@ -30,9 +30,14 @@ const Chats = () => {
             </View>
           </View>
 
-          <MessageCard />
-          <MessageCard />
-          <MessageCard />
+          <MessageCard
+            title={"Bob The Builder"}
+            message={"Building this dick"}
+            time={new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
