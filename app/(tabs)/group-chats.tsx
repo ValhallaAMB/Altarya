@@ -4,7 +4,7 @@ import React from 'react'
 const GroupChats = () => {
   return (
     <View>
-      <Text>GroupChats</Text>
+      <Text>GroupChatss</Text>
     </View>
   )
 }
