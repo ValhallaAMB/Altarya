@@ -32,7 +32,7 @@ const Chats = () => {
 
           <MessageCard
             title={"Bob The Builder"}
-            message={"Building this dick"}
+            message={"Building this ???"}
             time={new Date().toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
