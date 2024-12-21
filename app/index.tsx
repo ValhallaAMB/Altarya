@@ -19,7 +19,7 @@ export default function Index() {
 
           <CustomButton
             title="Get Started"
-            handlePress={() => router.push("/sign-in")}
+            handlePress={() => router.push("/chats")}
             containerStyle="mt-7 w-[260]"
             textStyle=""
             // containerStyle={{ marginTop: 28, width: "100%" }}
