@@ -1,11 +1,23 @@
-import { View, Text, SafeAreaView, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 // import * as ImagePicker from 'expo-image-picker'
-import CustomButton from '@/components/CustomButton';
-import FormField from '@/components/FormField';
+import CustomButton from "@/components/CustomButton";
+import FormField from "@/components/FormField";
+import { logOut } from "@/services/authServices";
 
 // const defualtProfileImage = require('../../assets/images/defaultProfilePicture.jpg');
 
+const logOutHandler = async () => {
+  await logOut();
+};
 
 const Profile = () => {
   //undefined if the user does not select an image
@@ -65,26 +77,38 @@ const Profile = () => {
         </View> */}
 
         <FormField
-          title={'Username'}
+          title={"Username"}
           value={username}
           handleChangeText={(newUsername) => setUsername(newUsername)}
-          extraStyles='mx-5 my-3'
+          extraStyles="mx-5 my-3"
         />
 
         <FormField
-          title={'Email'}
+          title={"Email"}
           value={email}
           handleChangeText={(newEmail) => setEmail(newEmail)}
-          extraStyles='mx-5 my-3'
+          extraStyles="mx-5 my-3"
         />
 
         <View>
-        <CustomButton
-          title={'Save'}
-          handlePress={ function (): void {throw new Error('Function not implemented.');} } 
-          isLoading={false}  
-          textStyle="text-white text-md"
-          containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"        
+          <CustomButton
+            title={"Save"}
+            handlePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+            // isLoading={false}
+            textStyle="text-white text-md"
+            containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"
+          />
+        </View>
+
+        <View>
+          <CustomButton
+            title={"Sign Out"}
+            handlePress={logOutHandler}
+            // isLoading={false}
+            textStyle="text-black text-md"
+            containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"
           />
         </View>
 
@@ -109,10 +133,9 @@ const Profile = () => {
           />
       
         </View> */}
-
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
