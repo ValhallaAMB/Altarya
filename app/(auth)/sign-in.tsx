@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
+import { logIn } from "@/services/authServices";
 
 const SignUp = () => {
   const [form, setForm] = useState<{ email: string; password: string }>({
@@ -12,10 +13,30 @@ const SignUp = () => {
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {
-    console.log(form);
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Please fill in all fields");
+      return;
+    }
+
+    // Login logic
+    const response = await logIn({
+      email: form.email,
+      password: form.password,
+    });
+
+    if (!response.success) {
+      Alert.alert("Sign in", response.msg);
+      return;
+    }
+
+    setForm({
+      email: "",
+      password: "",
+    });
+    router.push("/(tabs)/chatlist");
   };
 
   return (
@@ -46,7 +67,7 @@ const SignUp = () => {
           <CustomButton
             title="Sign In"
             handlePress={submit}
-            isLoading={isSubmitting}
+            // isLoading={isSubmitting}
             containerStyle="w-[260]"
           />
 
@@ -56,15 +77,20 @@ const SignUp = () => {
               Sign Up
             </Link>
           </View>
-          
-          <TouchableOpacity className="justify-center flex-row mt-4" onPress={() => router.push("/(tabs)/profile")}>
+
+          <TouchableOpacity
+            className="justify-center flex-row mt-4"
+            onPress={() => router.push("/(tabs)/profile")}
+          >
             <Text className="text-white">Click to go to Profile</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="justify-center flex-row mt-4" onPress={() => router.push("/chatroom")}>
+          <TouchableOpacity
+            className="justify-center flex-row mt-4"
+            onPress={() => router.push("/chatroom")}
+          >
             <Text className="text-white">Click to go to a chat</Text>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
     </SafeAreaView>

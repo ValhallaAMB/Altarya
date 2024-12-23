@@ -22,7 +22,7 @@ const TabsLayout = () => {
         }}
       >
         <Tabs.Screen
-          name="chats"
+          name="chatlist"
           options={{
             title: "Chats",
             // tabBarIcon is a function that returns a React.Node from React

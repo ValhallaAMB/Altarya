@@ -1,11 +1,11 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
+  // onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { auth, db } from "@/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { auth, db, usersCollection } from "@/firebaseConfig";
+import { doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 type LoginProps = {
   email: string;
@@ -13,51 +13,64 @@ type LoginProps = {
 };
 
 type CreateUserProps = {
-  loginCredentials: LoginProps;
+  email: string;
+  password: string;
   username: string;
-  profileURL: string;
+  // profileURL: string;
 };
 
 export const createUser = async ({
   username,
-  profileURL,
-  loginCredentials,
-}: CreateUserProps): Promise<void> => {
-  await createUserWithEmailAndPassword(
-    auth,
-    loginCredentials.email,
-    loginCredentials.password
-  )
-    .then(async (userCredential) => {
-      // Signed up
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        username,
-        profileURL,
-        userID: userCredential.user.uid,
-      }).catch((error) => {
-        let msg = error.message;
+  email,
+  password,
+}: // profileURL,
 
-        if (msg.includes("auth/invalid-email")) msg = "Invalid email";
-        else if (msg.includes("auth/email-already-in-use"))
-          msg = "Email in use";
-        else if (msg.includes("auth/weak-password"))
-          msg = "Password should be at least 6 characters";
-      });
-    })
-    .catch((error) => {
-      console.log("Error signing up", error.code, error.message);
+CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
+  try {
+    const userDoc = await getDocs(query(usersCollection, where("username", "==", username)));
+    if (userDoc)
+      return { success: false, msg: "Username already exists" };
+
+    console.log("User DOCS", userDoc);
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    // Signed up
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+      username,
+      // profileURL,
+      userID: userCredential.user.uid,
     });
+
+    return { success: true };
+  } catch (error) {
+    let msg = (error as Error).message;
+
+    if (msg.includes("auth/invalid-email")) msg = "Invalid email";
+    else if (msg.includes("auth/email-already-in-use"))
+      msg = "Email already exists";
+    else if (msg.includes("auth/weak-password"))
+      msg = "Password should be at least 6 characters";
+
+    return { success: false, msg };
+  }
 };
 
-export const logIn = async ({ email, password }: LoginProps): Promise<void> => {
-  await signInWithEmailAndPassword(auth, email, password)
-    // .then(() => ({ success: true }))
-    .catch((error) => {
-      let msg = error.message;
-      if (msg.includes("auth/invalid-credential")) msg = "Invalid credential";
+export const logIn = async ({ email, password }: LoginProps): Promise<{ success: boolean; msg?: string }> => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    return { success: true };
+  } catch (error) {
+    let msg = (error as Error).message;
+    if (msg.includes("auth/invalid-credential")) msg = "Invalid credential";
 
-      console.log("Error signing in", error.code, error.message);
-    });
+    // console.log("Error signing in", error.code, error.message);
+    return { success: false, msg };
+  }
 };
 
 export const logOut = async (): Promise<void> => {
@@ -72,17 +85,28 @@ export const logOut = async (): Promise<void> => {
     });
 };
 
-export const checkAuthState = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      if (!user) throw Error;
-
-      
-      
-      // ...
-    } else {
-      // User is signed out
-      // ...
-    }
-  });
-}
+// export const checkAuthState = (): Promise<DocumentData | null> => {
+//   return new Promise((resolve, reject) => {
+//     onAuthStateChanged(auth, async (user) => {
+//       if (user) {
+//         try {
+//           const userDoc = await getDoc(doc(db, "users", user.uid));
+//           if (userDoc.exists()) {
+//             const userData = userDoc.data() as DocumentData;
+//             resolve({
+//               profileURL: userData.profileURL,
+//               userID: userData.userID,
+//               username: userData.username,
+//             });
+//           } else {
+//             resolve(null);
+//           }
+//         } catch (error) {
+//           reject(error);
+//         }
+//       } else {
+//         resolve(null);
+//       }
+//     });
+//   });
+// };

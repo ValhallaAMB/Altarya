@@ -6,7 +6,7 @@ type Props = {
   handlePress: () => void;
   containerStyle?: string; // Tailwind class names
   textStyle?: string; // Tailwind class names
-  isLoading: boolean;
+  // isLoading: boolean;
 };
 
 const CustomButton = ({
@@ -14,12 +14,12 @@ const CustomButton = ({
   handlePress,
   containerStyle = "",
   textStyle = "",
-  isLoading,
+  // isLoading,
 }: Props) => {
   return (
     <Pressable
       onPress={handlePress}
-      disabled={isLoading}
+      // disabled={isLoading}
       className={`py-4 rounded-lg items-center justify-center active:opacity-85 bg-slate-200 ${containerStyle}`}
     >
       <Text className={`text-xl font-bold ${textStyle}`}>{title}</Text>
