@@ -1,39 +1,39 @@
 import { View, Text, SafeAreaView, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import * as ImagePicker from 'expo-image-picker'
+// import * as ImagePicker from 'expo-image-picker'
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
 
-const defualtProfileImage = require('../../assets/images/defaultProfilePicture.jpg');
+// const defualtProfileImage = require('../../assets/images/defaultProfilePicture.jpg');
 
 
 const Profile = () => {
   //undefined if the user does not select an image
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  // const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
 
-  const pickImageAsync = async () => {
-    // Request permission to access the device's media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Permission to access media library is required.");
-      return;
-    }
+  // const pickImageAsync = async () => {
+  //   // Request permission to access the device's media library
+  //   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   if (permissionResult.granted === false) {
+  //     alert("Permission to access media library is required.");
+  //     return;
+  //   }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
+  //   const result = await ImagePicker.launchImageLibraryAsync({
+  //     allowsEditing: true,
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-      console.log(result);
-    } else {
-      alert("You did not select an image.");
-      console.log(result);
-    }
-  };
+  //   if (!result.canceled) {
+  //     setSelectedImage(result.assets[0].uri);
+  //     console.log(result);
+  //   } else {
+  //     alert("You did not select an image.");
+  //     console.log(result);
+  //   }
+  // };
 
   return (
     <SafeAreaView className="bg-[#161616] h-full">
@@ -45,7 +45,7 @@ const Profile = () => {
           </Text>
         </View>
 
-        <View className="align-center items-center justify-center">
+        {/* <View className="align-center items-center justify-center">
           <Image
             source={selectedImage ? { uri: selectedImage } : defualtProfileImage}
             className="w-[100px] h-[100px] mt-6 rounded-full"
@@ -54,7 +54,7 @@ const Profile = () => {
           {/* <TouchableOpacity onPress={pickImageAsync}>
             <Text className="text-white py-2 px-4">Edit</Text>
           </TouchableOpacity> */}
-
+        {/*}
           <CustomButton
             title={'Edit'}
             handlePress={pickImageAsync}
@@ -62,7 +62,7 @@ const Profile = () => {
             textStyle="text-white text-md"
             containerStyle="mt-5 py-1 px-4 bg-transparent"
           />
-        </View>
+        </View> */}
 
         <FormField
           title={'Username'}

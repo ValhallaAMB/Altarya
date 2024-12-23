@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -33,10 +34,15 @@ const MessageCard = ({ title, message, time }: Props) => {
     setIsOptionsVisible(false);
   };
 
+  const toChatroom =() => {
+    router.push('/chatroom')
+  };
+
   return (
     <>
       {/* Main Card */}
       <Pressable
+        onPress={toChatroom}
         onLongPress={handleLongPress}
         className="flex-row items-center w-full py-2"
         ref={pressableRef}
