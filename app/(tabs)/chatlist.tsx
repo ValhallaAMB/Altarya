@@ -5,7 +5,7 @@ import MessageCard from "@/components/MessageCard";
 import CustomModal from "@/components/CustomModal";
 import { router } from "expo-router";
 
-const Chats = () => {
+const ChatList = () => {
   const [modalText, setModalText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -15,7 +15,7 @@ const Chats = () => {
         <View className="top-4 left-3">
           <View className="flex-row items-center w-full py-2">
             <Text className="text-5xl font-bold text-white">Chats</Text>
-            
+
             <View className="ms-auto me-5">
               <CustomModal
                 title="New Chat"
@@ -31,7 +31,7 @@ const Chats = () => {
               />
             </View>
           </View>
-          <TouchableOpacity onPress={() => router.push('/chatroom')}>
+          <TouchableOpacity onPress={() => router.push("/chatroom")}>
             <MessageCard
               title={"Bob The Builder"}
               message={"Building this ???"}
@@ -47,4 +47,4 @@ const Chats = () => {
   );
 };
 
-export default Chats;
+export default ChatList;
