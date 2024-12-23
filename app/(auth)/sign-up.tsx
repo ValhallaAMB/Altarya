@@ -32,20 +32,20 @@ const SignUp = () => {
       password: form.password,
     });
 
-    if (response.success) {
-      setForm({
+    if (!response.success) {
+      Alert.alert("Sign up failed", response.msg);
+      return;
+    }
+
+    setForm({
       email: "",
       password: "",
       username: "",
-      });
-      console.log("Signed up");
-      // setIsSubmitting(false);
-      router.push("/sign-in");
-    } else {
-      // setIsSubmitting(false);
-      Alert.alert("Sign up:", response.msg);
-      // console.log("Error signing up", response.error.code, response.error.message);
-    }
+    });
+
+    console.log("Signed up successfully");
+    // setIsSubmitting(false);
+    // console.log("Error signing up", response.error.code, response.error.message);
   };
 
   return (

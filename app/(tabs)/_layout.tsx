@@ -1,4 +1,4 @@
-import { View, Text, Platform } from "react-native";
+import { Platform } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";

@@ -5,7 +5,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, db, usersCollection } from "@/firebaseConfig";
-import { doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 type LoginProps = {
   email: string;
@@ -24,11 +24,13 @@ export const createUser = async ({
   email,
   password,
 }: // profileURL,
-
 CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
   try {
-    const userDoc = await getDocs(query(usersCollection, where("username", "==", username)));
-    if (userDoc)
+    const userDoc = await getDocs(
+      query(usersCollection, where("username", "==", username))
+    );
+    // The getDocs function returns a QuerySnapshot, which is always truthy even if no documents are found.
+    if (!userDoc.empty)
       return { success: false, msg: "Username already exists" };
 
     console.log("User DOCS", userDoc);
@@ -60,7 +62,10 @@ CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
   }
 };
 
-export const logIn = async ({ email, password }: LoginProps): Promise<{ success: boolean; msg?: string }> => {
+export const logIn = async ({
+  email,
+  password,
+}: LoginProps): Promise<{ success: boolean; msg?: string }> => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
     return { success: true };

@@ -28,7 +28,7 @@ const SignUp = () => {
     });
 
     if (!response.success) {
-      Alert.alert("Sign in", response.msg);
+      Alert.alert("Sign in failed", response.msg);
       return;
     }
 
