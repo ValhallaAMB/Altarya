@@ -36,11 +36,11 @@ const Profile = () => {
   // };
 
   return (
-    <SafeAreaView className="bg-[#161616] h-full">
+    <SafeAreaView className="bg-[#001220] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
-        <View className="items-center justify-top w-full px-4 mt-6 ">
-          <Text className="text-3xl font-bold text-blue-500">Edit Profile</Text>
-          <Text className="text-xl font-regular text-white mt-2 align-center">
+        <View className="items-center justify-top w-full px-4 mt-10 ">
+          <Text className="text-3xl font-bold text-[#d5db95]">Edit Profile</Text>
+          <Text className="text-lg font-regular text-white mt-2 mb-6 align-center">
             Edit your profile details
           </Text>
         </View>
@@ -63,12 +63,13 @@ const Profile = () => {
             containerStyle="mt-5 py-1 px-4 bg-transparent"
           />
         </View> */}
-
+        
         <FormField
           title={'Username'}
           value={username}
           handleChangeText={(newUsername) => setUsername(newUsername)}
-          extraStyles='mx-5 my-3'
+          extraStyles='mx-5 my-3 mt-10'
+          
         />
 
         <FormField
@@ -84,7 +85,7 @@ const Profile = () => {
           handlePress={ function (): void {throw new Error('Function not implemented.');} } 
           isLoading={false}  
           textStyle="text-white text-md"
-          containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"        
+          containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"        
           />
         </View>
 

@@ -68,7 +68,7 @@ const MessageCard = ({ title, message, time }: Props) => {
         </View>
 
         <View className="me-2">
-          <Text className="text-blue-600 text-base font-semibold px-4">
+          <Text className="text-[#d5db95] text-base font-semibold px-4">
             {time}
           </Text>
         </View>
@@ -92,12 +92,12 @@ const MessageCard = ({ title, message, time }: Props) => {
             }}
           >
             {/* Message bubble */}
-            <View className="bg-[#4e8fde] p-2.5 rounded-xl my-2">
+            <View className="bg-[#94b781] p-2.5 rounded-xl my-2">
               <Text className="text-white text-lg">{title}</Text>
             </View>
 
             {/* List of Options */}
-            <View className="bg-[#161616] rounded-xl p-2.5">
+            <View className="bg-[#262d36] rounded-xl p-2.5">
               <Pressable onPress={() => console.log("Edit Pressed")}>
                 <Text className="text-white py-2.5 text-start">Edit</Text>
               </Pressable>
