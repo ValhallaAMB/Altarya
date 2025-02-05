@@ -5,12 +5,12 @@ import { getFirestore, collection } from "firebase/firestore";
 // import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCBiARBOkVkFY79sJTP5GA6slT25dnSvaI",
-  authDomain: "altarya-571ed.firebaseapp.com",
-  projectId: "altarya-571ed",
-  storageBucket: "altarya-571ed.firebasestorage.app",
-  messagingSenderId: "352050324209",
-  appId: "1:352050324209:web:fb2b421ec6f7619692bf50",
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
 };
 
 const app = initializeApp(firebaseConfig);
