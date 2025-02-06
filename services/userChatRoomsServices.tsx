@@ -37,7 +37,7 @@ export const createChatRoom = async (
     else if (searchedUserId === user?.uid)
       return { success: false, msg: "You cannot chat with yourself" };
 
-    const chatId = `${searchedUserId}-${user?.uid}`;
+    const chatId = [searchedUserId, user?.uid].sort().join("-");
     const userChatRoomsRef = collection(db, "userchatrooms");
     const chatRef = collection(db, "chats");
     const newChatRef = doc(chatRef, chatId);

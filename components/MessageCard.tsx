@@ -1,23 +1,20 @@
+import { useGlobalContext } from "@/context/GlobalContext";
 import { router } from "expo-router";
 import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  Modal,
-} from "react-native";
+import { View, Text, Pressable, Image, Modal } from "react-native";
 
 type Props = {
+  receiverId: string;
   title: string;
   message: string;
   time: string;
 };
 
-const MessageCard = ({ title, message, time }: Props) => {
+const MessageCard = ({ receiverId, title, message, time }: Props) => {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const pressableRef = useRef<View | null>(null);
+  const { setChatroomParams } = useGlobalContext();
 
   const handleLongPress = () => {
     if (pressableRef.current) {
@@ -33,18 +30,20 @@ const MessageCard = ({ title, message, time }: Props) => {
     setIsOptionsVisible(false);
   };
 
-  const toChatroom =() => {
-    router.push('/chatroom')
+  const toChatroom = () => {
+    // console.log("Pressable clicked:", receiverId, title);
+    setChatroomParams(receiverId, title);
+    router.push("/chatroom");
   };
 
   return (
     <>
       {/* Main Card */}
       <Pressable
-        onPress={toChatroom}
-        onLongPress={handleLongPress}
         className="flex-row items-center w-full py-2"
         ref={pressableRef}
+        onLongPress={handleLongPress}
+        onPress={toChatroom}
       >
         <View className="h-16 w-16 p-1 ms-1">
           <Image

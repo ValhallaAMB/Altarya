@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MessageCard from "@/components/MessageCard";
 import CustomModal from "@/components/CustomModal";
-import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { retrieveChatLists } from "@/services/chatListServices";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import { db } from "@/firebaseConfig";
 
 const ChatList = () => {
   const [modalText, setModalText] = useState("");
@@ -35,7 +32,7 @@ const ChatList = () => {
         <View className="top-4 left-3">
           <View className="flex-row items-center w-full py-2">
             <Text className="text-5xl font-bold text-white ml-3">Chats</Text>
-            
+
             <View className="ms-auto me-5">
               <CustomModal
                 title="New Chat"
@@ -51,19 +48,18 @@ const ChatList = () => {
               />
             </View>
           </View>
-          <TouchableOpacity onPress={() => router.push("/chatroom")}>
-            {chats.map((chat) => (
-              <MessageCard
-                key={chat.chatId}
-                title={chat.user.username}
-                message={chat.lastMessage}
-                time={new Date(chat.updatedAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              />
-            ))}
-          </TouchableOpacity>
+          {chats.map((chat) => (
+            <MessageCard
+              key={chat.chatId}
+              receiverId={chat.chatId}
+              title={chat.user.username}
+              message={chat.lastMessage}
+              time={new Date(chat.updatedAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            />
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>

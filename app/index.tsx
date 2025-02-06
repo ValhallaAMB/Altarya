@@ -2,7 +2,6 @@
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-
 import CustomButton from "@/components/CustomButton";
 
 export default function Index() {
@@ -24,10 +23,8 @@ export default function Index() {
             textStyle=""
             // containerStyle={{ marginTop: 28, width: "100%" }}
             // textStyle={{ fontSize: 20, fontWeight: "bold" }}
-            isLoading={false}
+            // isLoading={false}
           />
-
-          {/* <StatusBar backgroundColor="#161622" style="light" /> */}
         </View>
       </ScrollView>
     </SafeAreaView>

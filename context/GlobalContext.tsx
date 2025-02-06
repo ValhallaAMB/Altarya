@@ -5,44 +5,35 @@ import {
   useEffect,
   useState,
 } from "react";
-// import { checkAuthState } from "@/services/authServices";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 
 export const GlobalContext = createContext<{
   isAuthenticated: boolean;
   user: User | null;
+  receiverId: string | null;
+  receiverUsername: string | null;
+  setChatroomParams: (receiverId: string, receiverUsername: string) => void;
 }>({
   isAuthenticated: false,
   user: null,
+  receiverId: null,
+  receiverUsername: null,
+  setChatroomParams: () => {},
 });
-
-export const useGlobalContext = () => {
-  const value = useContext(GlobalContext);
-
-  if (!value) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
-  return value;
-};
 
 const GlobalContextProvider = ({ children }: PropsWithChildren<{}>) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [receiverId, setReceiverId] = useState<string | null>(null);
+  const [receiverUsername, setReceiverUsername] = useState<string | null>(null);
+
+  const setChatroomParams = (receiverId: string, receiverUsername: string) => {
+    setReceiverId(receiverId);
+    setReceiverUsername(receiverUsername);
+  };
 
   useEffect(() => {
-    // checkAuthState()
-    //   .then((res) => {
-    //     setIsAuthenticated(true);
-    //     setUser(res);
-    //   })
-    //   .catch((error) => {
-    //     setIsAuthenticated(false);
-    //     setUser(null);
-    //     console.error("Error checking auth state", error);
-    //   });
-
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -55,14 +46,35 @@ const GlobalContextProvider = ({ children }: PropsWithChildren<{}>) => {
         setIsAuthenticated(false);
         setUser(null);
       }
+
     });
   }, []);
 
   return (
-    <GlobalContext.Provider value={{ isAuthenticated, user }}>
+    <GlobalContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        receiverId,
+        receiverUsername,
+        setChatroomParams,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );
 };
 
 export default GlobalContextProvider;
+
+export const useGlobalContext = () => {
+  const value = useContext(GlobalContext);
+
+  if (!value) {
+    throw new Error(
+      "useGlobalContext must be used within a GlobalContextProvider"
+    );
+  }
+
+  return value;
+};

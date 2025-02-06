@@ -51,7 +51,9 @@ const Profile = () => {
     <SafeAreaView className="bg-[#001220] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="items-center justify-top w-full px-4 mt-10 ">
-          <Text className="text-3xl font-bold text-[#d5db95]">Edit Profile</Text>
+          <Text className="text-3xl font-bold text-[#d5db95]">
+            Edit Profile
+          </Text>
           <Text className="text-lg font-regular text-white mt-2 mb-6 align-center">
             Edit your profile details
           </Text>
@@ -75,13 +77,12 @@ const Profile = () => {
             containerStyle="mt-5 py-1 px-4 bg-transparent"
           />
         </View> */}
-        
+
         <FormField
           title={"Username"}
           value={username}
           handleChangeText={(newUsername) => setUsername(newUsername)}
-          extraStyles='mx-5 my-3 mt-10'
-          
+          extraStyles="mx-5 my-3 mt-10"
         />
 
         <FormField
@@ -92,12 +93,14 @@ const Profile = () => {
         />
 
         <View>
-        <CustomButton
-          title={'Save'}
-          handlePress={ function (): void {throw new Error('Function not implemented.');} } 
-          // isLoading={false}  
-          textStyle="text-white text-md"
-          containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"        
+          <CustomButton
+            title={"Save"}
+            handlePress={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+            // isLoading={false}
+            textStyle="text-white text-md"
+            containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
           />
         </View>
 
@@ -107,17 +110,7 @@ const Profile = () => {
             handlePress={logOutHandler}
             // isLoading={false}
             textStyle="text-black text-md"
-            containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"
-          />
-        </View>
-
-        <View>
-          <CustomButton
-            title={"Sign Out"}
-            handlePress={logOutHandler}
-            // isLoading={false}
-            textStyle="text-black text-md"
-            containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"
+            containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
           />
         </View>
 
