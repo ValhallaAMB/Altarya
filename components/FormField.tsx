@@ -16,6 +16,7 @@ type Props = {
   handleChangeText: (e: string) => void;
   keyboardType?: "email-address" | "default";
   showPassword?: boolean;
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
   setShowPassword?: (e: boolean) => void;
 };
 
@@ -26,6 +27,7 @@ const FormField = ({
   placeholder,
   handleChangeText,
   keyboardType,
+  autoCapitalize,
 }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,6 +45,7 @@ const FormField = ({
           value={value}
           placeholder={placeholder}
           keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
           onChangeText={handleChangeText}
           placeholderTextColor={"#8c8c8c"}
           secureTextEntry={title === "Password" && !showPassword}
