@@ -16,35 +16,16 @@ const ChatList = () => {
   const { user } = useGlobalContext();
 
   useEffect(() => {
-    // retrieveChatLists(user)
-    if (!user) return;
+    let unSub: (() => void) | undefined;
 
-    const unSub = onSnapshot(
-      doc(db, "userchatrooms", user?.uid),
-      async (res) => {
-        const items = res.data()?.chats;
-        console.log("items", items);
+    const fetchData = async () => {
+      unSub = await retrieveChatLists(user, setChats);
+    };
 
-        const promises = items.map(async (item: any) => {
-          const userDocRef = doc(db, "users", item.receiverId);
-          const userDocSnap = await getDoc(userDocRef);
-
-          const user = userDocSnap.data();
-
-          console.log("user", user);
-
-          return { ...item, user };
-        });
-
-        const chatData = await Promise.all(promises);
-        console.log("chatData", chatData);
-
-        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
-      }
-    );
+    fetchData();
 
     return () => {
-      unSub();
+      if (unSub) unSub();
     };
   }, [user?.uid]);
 

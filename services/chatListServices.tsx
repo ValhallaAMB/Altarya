@@ -5,13 +5,14 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-export const retrieveChatLists = async (user: { uid: string } | null) => {
-  try {
-    if (!user?.uid) return [];
+export const retrieveChatLists = async (user: { uid: string } | null, setChats: (chats: any[]) => void) => {
+  if (!user) return;
 
-    onSnapshot(doc(db, "userchatrooms", user.uid), async (res) => {
+  return onSnapshot(
+    doc(db, "userchatrooms", user.uid),
+    async (res) => {
       const items = res.data()?.chats;
-      console.log("items", items);
+      // console.log("items", items);
 
       const promises = items.map(async (item: any) => {
         const userDocRef = doc(db, "users", item.receiverId);
@@ -19,18 +20,16 @@ export const retrieveChatLists = async (user: { uid: string } | null) => {
 
         const user = userDocSnap.data();
 
-        console.log("user", user);
+        // console.log("user", user);
+        // console.log("...item", item);
 
         return { ...item, user };
       });
 
       const chatData = await Promise.all(promises);
-      console.log("chatData", chatData);
+      // console.log("chatData", chatData);
 
-      return chatData;
-    });
-  } catch (error) {
-    console.error("Error retrieving chat lists", error);
-    return [];
-  }
+      setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
+    }
+  );
 };
