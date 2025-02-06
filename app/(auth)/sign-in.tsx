@@ -54,6 +54,7 @@ const SignUp = () => {
             placeholder="xxx@xxx.xxx"
             handleChangeText={(e) => setForm({ ...form, email: e })}
             keyboardType="email-address"
+            autoCapitalize="none"
             extraStyles="mb-5 mt-6"
           />
 

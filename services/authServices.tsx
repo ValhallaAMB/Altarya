@@ -4,8 +4,16 @@ import {
   // onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { auth, db, usersCollection } from "@/firebaseConfig";
-import { doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { auth, db } from "@/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
 type LoginProps = {
   email: string;
@@ -27,11 +35,21 @@ export const createUser = async ({
 
 CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
   try {
-    const userDoc = await getDocs(query(usersCollection, where("username", "==", username)));
-    if (userDoc)
-      return { success: false, msg: "Username already exists" };
+    const usersCollectionRef = collection(db, "users");
+    const usersCollectionSnapshot = await getDocs(usersCollectionRef);
 
-    console.log("User DOCS", userDoc);
+    const userQuery = query(
+      usersCollectionRef,
+      where("username", "==", username)
+    );
+    const querySnapshot = await getDocs(userQuery);
+
+    // Check if the "users" collection exists, if not create it
+    if (usersCollectionSnapshot.empty) {
+      await setDoc(doc(db, "users", "defaultUser"), {});
+      await setDoc(doc(db, "userchatrooms", "defaultUserChatRooms"), {});
+    } else if (!querySnapshot.empty)
+      return { success: false, msg: "User already exists" };
 
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -43,7 +61,11 @@ CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
     await setDoc(doc(db, "users", userCredential.user.uid), {
       username,
       // profileURL,
-      userID: userCredential.user.uid,
+      userId: userCredential.user.uid,
+    });
+
+    await setDoc(doc(db, "userchatrooms", userCredential.user.uid), {
+      chats: [],
     });
 
     return { success: true };
@@ -60,7 +82,10 @@ CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
   }
 };
 
-export const logIn = async ({ email, password }: LoginProps): Promise<{ success: boolean; msg?: string }> => {
+export const logIn = async ({
+  email,
+  password,
+}: LoginProps): Promise<{ success: boolean; msg?: string }> => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
     return { success: true };
@@ -84,29 +109,3 @@ export const logOut = async (): Promise<void> => {
       console.log("Error signing out", error.code, error.message);
     });
 };
-
-// export const checkAuthState = (): Promise<DocumentData | null> => {
-//   return new Promise((resolve, reject) => {
-//     onAuthStateChanged(auth, async (user) => {
-//       if (user) {
-//         try {
-//           const userDoc = await getDoc(doc(db, "users", user.uid));
-//           if (userDoc.exists()) {
-//             const userData = userDoc.data() as DocumentData;
-//             resolve({
-//               profileURL: userData.profileURL,
-//               userID: userData.userID,
-//               username: userData.username,
-//             });
-//           } else {
-//             resolve(null);
-//           }
-//         } catch (error) {
-//           reject(error);
-//         }
-//       } else {
-//         resolve(null);
-//       }
-//     });
-//   });
-// };

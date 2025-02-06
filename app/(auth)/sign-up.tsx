@@ -34,16 +34,17 @@ const SignUp = () => {
 
     if (response.success) {
       setForm({
-      email: "",
-      password: "",
-      username: "",
+        email: "",
+        password: "",
+        username: "",
       });
       console.log("Signed up");
       // setIsSubmitting(false);
-      router.push("/sign-in");
+      // router.push("/sign-in");
+      router.push("/(tabs)/chatlist");
     } else {
       // setIsSubmitting(false);
-      Alert.alert("Sign up:", response.msg);
+      Alert.alert("Sign up", response.msg);
       // console.log("Error signing up", response.error.code, response.error.message);
     }
   };
@@ -62,6 +63,7 @@ const SignUp = () => {
             value={form.username}
             placeholder="username"
             handleChangeText={(e) => setForm({ ...form, username: e })}
+            autoCapitalize="none"
             extraStyles="mb-5 mt-6"
           />
 
@@ -71,6 +73,7 @@ const SignUp = () => {
             placeholder="xxx@xxx.xxx"
             handleChangeText={(e) => setForm({ ...form, email: e })}
             keyboardType="email-address"
+            autoCapitalize="none"
             extraStyles="mb-5"
           />
 

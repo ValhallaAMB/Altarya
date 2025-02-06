@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,11 @@ import {
   TextInput,
   Pressable,
   Platform,
+  Alert,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { createChatRoom, searchUser } from "@/services/userChatRoomsServices";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 type Props = {
   title?: string;
@@ -35,6 +38,43 @@ const CustomModal = ({
   useIcon,
   iconType,
 }: Props) => {
+  const [foundUser, setFoundUser] = useState<boolean>(false);
+  const [searchedUserId, setSearchedUserId] = useState<string>("");
+
+  const { user } = useGlobalContext();
+
+  const handleSearch = async () => {
+    if (!value) {
+      Alert.alert("Please fill in the field before searching");
+    }
+
+    let response = await searchUser(value);
+    // console.log("response", response);
+    if (response) {
+      // console.log("User found");
+      setSearchedUserId(response.userId);
+      setFoundUser(true);
+    } else {
+      // console.log("User not found");
+      Alert.alert("User not found");
+      setSearchedUserId("null");
+      setFoundUser(false);
+    }
+  };
+
+  const handleAdd = async () => {
+    let res = await createChatRoom(searchedUserId, user);
+    if (res.success) {
+      Alert.alert("Chat room created");
+      modalDisplayFalse();
+      handleChangeText("");
+      setFoundUser(false);
+    } else {
+      Alert.alert(res.msg || "An error occurred");
+      setFoundUser(false);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -56,6 +96,7 @@ const CustomModal = ({
               className="bg-gray-800 text-white p-4 rounded-md"
               value={value}
               placeholder={placeholder}
+              autoCapitalize="none"
               onChangeText={handleChangeText}
               placeholderTextColor="#8c8c8c"
             />
@@ -66,14 +107,31 @@ const CustomModal = ({
               </Pressable>
               <Pressable
                 className="px-4 py-2 bg-blue-950 rounded-xl"
-                onPress={() => {
-                  console.log("Add button clicked:", value);
-                  modalDisplayFalse();
-                }}
+                onPress={handleSearch}
               >
-                <Text className="text-white font-semibold">Add</Text>
+                <Text className="text-white font-semibold">Search</Text>
               </Pressable>
             </View>
+
+            {foundUser && (
+              <View className="flex-row justify-between mt-4">
+                <Text className="text-white text-lg font-semibold ps-2">
+                  {value}
+                </Text>
+                <Pressable
+                  className="px-4 py-2 bg-blue-950 rounded-xl"
+                  onPress={handleAdd}
+                >
+                  <Text className="text-white font-semibold">Add</Text>
+                </Pressable>
+                {/* <Pressable
+                  className="px-4 py-2 bg-green-600 rounded-xl"
+                  onPress={handleAdd}
+                >
+                  <Text className="text-white font-semibold">Add</Text>
+                </Pressable> */}
+              </View>
+            )}
           </View>
         </KeyboardAvoidingView>
       </Modal>

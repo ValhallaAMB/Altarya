@@ -6,7 +6,6 @@ import {
   Pressable,
   Image,
   Modal,
-  findNodeHandle,
 } from "react-native";
 
 type Props = {
