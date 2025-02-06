@@ -87,13 +87,13 @@ const CustomModal = ({
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1 justify-center items-center bg-black/70"
         >
-          <View className="bg-[#161616] w-[80%] p-5 rounded-2xl">
+          <View className="bg-[#001220] w-[80%] p-5 rounded-2xl">
             <Text className="text-white text-lg font-semibold mb-4">
               {modelTitle}
             </Text>
 
             <TextInput
-              className="bg-gray-800 text-white p-4 rounded-md"
+              className="bg-[#262d36] text-white p-4 rounded-md"
               value={value}
               placeholder={placeholder}
               autoCapitalize="none"
@@ -138,7 +138,7 @@ const CustomModal = ({
 
       {useIcon ? (
         <Pressable onPress={modalDisplayTrue}>
-          <Ionicons name={iconType as any} size={28} color="white" />
+          <Ionicons name={iconType as any} size={28} color="#94b781" />
         </Pressable>
       ) : (
         <Pressable

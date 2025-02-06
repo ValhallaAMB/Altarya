@@ -30,12 +30,12 @@ const ChatList = () => {
   }, [user?.uid]);
 
   return (
-    <SafeAreaView className="bg-[#161616] h-full">
+    <SafeAreaView className="bg-[#001220] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="top-4 left-3">
           <View className="flex-row items-center w-full py-2">
-            <Text className="text-5xl font-bold text-white">Chats</Text>
-
+            <Text className="text-5xl font-bold text-white ml-3">Chats</Text>
+            
             <View className="ms-auto me-5">
               <CustomModal
                 title="New Chat"
