@@ -7,7 +7,7 @@ import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { logIn } from "@/services/authServices";
 
-const SignUp = () => {
+const SignIn = () => {
   const [form, setForm] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
@@ -78,8 +78,8 @@ const SignUp = () => {
               Sign Up
             </Link>
           </View>
-
-          <TouchableOpacity
+ 
+          {/* <TouchableOpacity
             className="justify-center flex-row mt-4"
             onPress={() => router.push("/(tabs)/profile")}
           >
@@ -91,11 +91,11 @@ const SignUp = () => {
             onPress={() => router.push("/chatroom")}
           >
             <Text className="text-white">Click to go to a chat</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default SignUp;
+export default SignIn;

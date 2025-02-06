@@ -1,6 +1,6 @@
 import { View, Text, Platform } from "react-native";
 import React from "react";
-import { router, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -14,7 +14,7 @@ const TabsLayout = () => {
           headerShadowVisible: false,
           tabBarStyle: {
             backgroundColor: "#262d36",
-            borderTopColor: "#333333",
+            borderTopColor: "#333333", 
             borderTopWidth: 1,
             height: Platform.OS === "ios" ? 80 : 70,
           },
@@ -52,15 +52,6 @@ const TabsLayout = () => {
                 />
               );
             },
-          //   headerShown: true,
-          //   headerStyle: {
-          //     backgroundColor: '#001220',
-          //   },
-          //   headerTintColor: '#94b781',
-          //   headerTitle: "",
-          //   headerLeft: () => (
-          //     <Text className="text-[#94b781] px-5 text-xl" onPress={() => router.push("/chats")}> Back </Text>
-          //   )
           }}
         />
       </Tabs>
