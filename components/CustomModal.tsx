@@ -119,7 +119,7 @@ const CustomModal = ({
                   {value}
                 </Text>
                 <Pressable
-                  className="px-4 py-2 bg-blue-950 rounded-xl"
+                  className="px-4 py-2 bg-[#94b781] rounded-xl"
                   onPress={handleAdd}
                 >
                   <Text className="text-white font-semibold">Add</Text>
