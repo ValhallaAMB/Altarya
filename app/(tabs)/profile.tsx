@@ -95,9 +95,9 @@ const Profile = () => {
         <CustomButton
           title={'Save'}
           handlePress={ function (): void {throw new Error('Function not implemented.');} } 
-          isLoading={false}  
+          // isLoading={false}  
           textStyle="text-white text-md"
-          containerStyle="mt-10 mx-5 py-[10px] bg-blue-600"        
+          containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"        
           />
         </View>
 
