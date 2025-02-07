@@ -10,6 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import { createChatRoomId } from "@/utils/common";
 
 export const searchUser = async (username: string) => {
   try {
@@ -37,7 +38,7 @@ export const createChatRoom = async (
     else if (searchedUserId === user?.uid)
       return { success: false, msg: "You cannot chat with yourself" };
 
-    const chatId = [searchedUserId, user?.uid].sort().join("-");
+    const chatId = createChatRoomId(user?.uid, searchedUserId);
     const userChatRoomsRef = collection(db, "userchatrooms");
     const chatRef = collection(db, "chats");
     const newChatRef = doc(chatRef, chatId);

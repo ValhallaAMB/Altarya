@@ -1,16 +1,15 @@
 import { db } from "@/firebaseConfig";
-import {
-  doc,
-  getDoc,
-  onSnapshot,
-} from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 
-export const retrieveChatLists = async (user: { uid: string } | null, setChats: (chats: any[]) => void) => {
-  if (!user) return;
+// (chats: any[]) => void: This is the type signature of the function. It indicates that setChats is a function that takes one parameter named chats and returns void.
+export const retrieveChatLists = async (
+  user: { uid: string } | null,
+  setChats: (chats: any[]) => void
+) => {
+  try {
+    if (!user) return;
 
-  return onSnapshot(
-    doc(db, "userchatrooms", user.uid),
-    async (res) => {
+    return onSnapshot(doc(db, "userchatrooms", user.uid), async (res) => {
       const items = res.data()?.chats;
       // console.log("items", items);
 
@@ -30,6 +29,8 @@ export const retrieveChatLists = async (user: { uid: string } | null, setChats: 
       // console.log("chatData", chatData);
 
       setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
-    }
-  );
+    });
+  } catch (error) {
+    console.log("Error retrieving chat lists", error);
+  }
 };
