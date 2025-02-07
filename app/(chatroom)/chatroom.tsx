@@ -1,139 +1,120 @@
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+// filepath: /c:/Users/Valhalla/Desktop/Altarya/app/(chatroom)/chatroom.tsx
 import {
-  Bubble,
-  GiftedChat,
-  InputToolbar,
-  Send,
-  SystemMessage,
-  Time,
-} from "react-native-gifted-chat";
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { listenToMessages, sendMessage } from "@/services/chatServices";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { DocumentData } from "firebase/firestore";
+import { createChatRoomId } from "@/utils/common";
 
 const Chatroom = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const { user, receiverId } = useGlobalContext();
+  const [chats, setChats] = useState<DocumentData | undefined>();
+  const chatId =
+    user?.uid && receiverId ? createChatRoomId(user.uid, receiverId) : "";
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    //error lines might disappear once we connect the chat to the database
-    setMessages([
-      {
-        _id: 1,
-        text: "Hello loser >:)",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "Lespodsay",
-          avatar: "",
-        },
-      },
+    let unSub: (() => void) | undefined;
 
-      {
-        _id: 0,
-        system: true,
-        text: "This chat is being saved in our databases.",
-      },
-    ]);
-  }, []);
+    const fetchData = async () => {
+      unSub = listenToMessages(chatId, setChats);
+    };
 
-  const onSend = (messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
+    fetchData();
+
+    return () => {
+      if (unSub) unSub();
+      console.log("chats", chats);
+    };
+  }, [chatId]);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [chats]);
+
+  // useEffect(() => {
+  //   console.log("chats", chats);
+  // }, [chats]);
+
+  const handleSendMessage = () => {
+    if (text.trim() === "") return;
+    sendMessage(chatId, user?.uid || "", receiverId || "", text);
+    setText("");
   };
 
   return (
-    <SafeAreaView className="bg-[#262d36] h-full">
-        <View className="flex-1">
-          <GiftedChat
-            messages={messages}
-            //error might disappear once we connect the chat to the database, for now every message is sent locally
-            onSend={(messages: any) => onSend(messages)}
-            user={{
-              _id: 1,
-            }}
-            renderTime={(props) => (
-              <Time
-                {...props}
-                timeTextStyle={{
-                  left: {
-                    color: "black",
-                  },
-                  right: {
-                    color: "white",
-                  },
-                }}
-              />
-            )}
-            onInputTextChanged={setText}
-            renderSystemMessage={(props) => {
-              return (
-                <SystemMessage
-                  {...props}
-                  textStyle={{
-                    color: "white",
-                    fontSize: 13,
-                    backgroundColor: "#306c60",
-                    padding: 15,
-                    borderRadius: 15,
-                  }}
-                />
-              );
-            }}
-            renderAvatar={null}
-            maxComposerHeight={100}
-            renderBubble={(props) => {
-              return (
-                <Bubble
-                  {...props}
-                  wrapperStyle={{
-                    left: {
-                      backgroundColor: "#e3e8af",
-                    },
-                    right: {
-                      backgroundColor: "#94b781",
-                    },
-                  }}
-                />
-              );
-            }}
-            textInputProps={{
-              style: {
-                backgroundColor: "white",
-                borderRadius: 15,
-                borderWidth: 1,
-                borderColor: "#cbd5e1",
-                paddingHorizontal: 10,
-                fontSize: 16,
-                marginVertical: 10,
-                paddingTop: 8,
-                paddingBottom: 8,
-                flex: 1,
-                marginLeft: 8,
-              },
-            }}
-            renderInputToolbar={(props) => (
-              <InputToolbar
-                {...props}
-                containerStyle={{
-                  backgroundColor: "#f3f4f6",
-                }}
-              />
-            )}
-            renderSend={(props) => (
-              <View className="px-3 pb-2">
-                {text.length > 0 && (
-                  <Send
-                    {...props}
-                    containerStyle={{ justifyContent: "center" }}
-                  >
-                    <Ionicons name="send" color={"#94b781"} size={28} />
-                  </Send>
-                )}
+    <SafeAreaView className="bg-[#001220] flex-1">
+      <ScrollView className="bg-[#262d36]" ref={scrollViewRef}>
+        <View className="p-4 gap-4">
+          {chats?.messages?.map((message: any, index: number) => (
+            <View
+              key={index}
+              className={`max-w-72 ${
+                message.senderId === user?.uid ? "self-end" : "self-start"
+              }`}
+            >
+              <View>
+                <Text
+                  className={`text-white text-md rounded-xl p-3 ${
+                    message.senderId === user?.uid
+                      ? "bg-[#94b781]"
+                      : "bg-[#4f514e]"
+                  }`}
+                >
+                  {message.text}
+                </Text>
+                <Text
+                  className={`text-white text-xs ${
+                    message.senderId === user?.uid ? "self-end pe-1" : "self-start ps-1"
+                  }`}
+                >
+                  {new Date(message.createdAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </Text>
               </View>
-            )}
-          />
+            </View>
+          ))}
         </View>
+      </ScrollView>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={98}
+        className="pt-3"
+      >
+        <View className="flex-row max-h-[100px] px-3 gap-x-3">
+          <TextInput
+            className="flex-1 px-4 pb-3 text-white text-lg rounded-2xl border-2 border-[#bac0b6]"
+            multiline
+            value={text}
+            placeholder={"Type a message..."}
+            onChangeText={setText}
+            placeholderTextColor={"#8c8c8c"}
+          />
+          <Pressable
+            className="flex justify-center"
+            onPress={() => handleSendMessage()}
+          >
+            <Ionicons name="send" color={"#94b781"} size={28} />
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -124,12 +124,6 @@ const CustomModal = ({
                 >
                   <Text className="text-white font-semibold">Add</Text>
                 </Pressable>
-                {/* <Pressable
-                  className="px-4 py-2 bg-green-600 rounded-xl"
-                  onPress={handleAdd}
-                >
-                  <Text className="text-white font-semibold">Add</Text>
-                </Pressable> */}
               </View>
             )}
           </View>

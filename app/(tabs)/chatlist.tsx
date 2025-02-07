@@ -51,7 +51,7 @@ const ChatList = () => {
           {chats.map((chat) => (
             <MessageCard
               key={chat.chatId}
-              receiverId={chat.chatId}
+              receiverId={chat.receiverId}
               title={chat.user.username}
               message={chat.lastMessage}
               time={new Date(chat.updatedAt).toLocaleTimeString([], {
