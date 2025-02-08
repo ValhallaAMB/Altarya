@@ -59,19 +59,21 @@ export const createChatRoom = async (
     // console.log("userUID", user?.uid);
     // console.log("searchedUSERID", searchedUserId);
 
-    await updateDoc(doc(userChatRoomsRef, user?.uid), {
+    await setDoc(doc(userChatRoomsRef, user?.uid), {
       chats: arrayUnion({
         chatId: newChatRef.id,
         lastMessage: "",
+        messageId: "",
         receiverId: searchedUserId,
         updatedAt: Date.now(),
       }),
     });
 
-    await updateDoc(doc(userChatRoomsRef, searchedUserId), {
+    await setDoc(doc(userChatRoomsRef, searchedUserId), {
       chats: arrayUnion({
         chatId: newChatRef.id,
         lastMessage: "",
+        messageId: "",
         receiverId: user?.uid,
         updatedAt: Date.now(),
       }),

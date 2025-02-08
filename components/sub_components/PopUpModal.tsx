@@ -34,9 +34,14 @@ const PopupModal = ({
   };
 
   const handleDeleteMessage = async () => {
-    const res = await deleteMessage(chatId, user?.uid || "", messageId);
-    if (res) Alert.alert("Chat Room Deleted Successfully");
-    else Alert.alert("Error Deleting Chat Room");
+    const res = await deleteMessage(
+      chatId,
+      user?.uid || "",
+      receiverId || "",
+      messageId
+    );
+    if (res) Alert.alert("Message Deleted Successfully");
+    else Alert.alert("Error Deleting Message");
     closeOptions();
   };
 
