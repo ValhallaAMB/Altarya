@@ -13,7 +13,7 @@ const ChatList = () => {
   const { user } = useGlobalContext();
 
   useEffect(() => {
-    let unSub: (() => void) | undefined;
+    let unSub: (() => void) | undefined; 
 
     const fetchData = async () => {
       unSub = await retrieveChatLists(user, setChats);
