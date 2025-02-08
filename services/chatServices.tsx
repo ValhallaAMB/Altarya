@@ -28,10 +28,11 @@ export const sendMessage = async (
   receiverId: string,
   text: string
 ) => {
+  const _id = uuid.v4();
   try {
     await updateDoc(doc(db, "chats", chatId), {
       messages: arrayUnion({
-        _id: uuid.v4(),
+        _id,
         senderId: userId,
         text,
         createdAt: Date.now(),
@@ -52,6 +53,7 @@ export const sendMessage = async (
         );
 
         userChatsData.chats[chatIndex].lastMessage = text;
+        userChatsData.chats[chatIndex].messageId = _id;
         // userChatsData.chats[chatIndex].isSeen =
         //   id === userId ? true : false;
         userChatsData.chats[chatIndex].updatedAt = Date.now();
@@ -69,16 +71,29 @@ export const sendMessage = async (
 export const deleteMessage = async (
   chatId: string,
   userId: string,
+  receiverId: string,
   messageId: string
 ) => {
   try {
-    // await updateDoc(doc(db, "chats", chatId), {
-    //   messages: arrayUnion({
-    //     messageId,
-    //     isMessageDeleted: true,
-    //     text: "This message has been deleted",
-    //   }),
-    // });
+    const lastMessageCheck = async (userId: string) => {
+      const userChatsRef = doc(db, "userchatrooms", userId);
+      const userChatsSnapshot = await getDoc(userChatsRef);
+
+      if (userChatsSnapshot.exists()) {
+        const userChatsData = userChatsSnapshot.data();
+        const chatIndex = userChatsData.chats.findIndex(
+          (chat: any) => chat.chatId === chatId
+        );
+
+        if (userChatsData.chats[chatIndex].messageId === messageId)
+          userChatsData.chats[chatIndex].lastMessage =
+            "This message has been deleted";
+
+        await updateDoc(userChatsRef, {
+          chats: userChatsData.chats,
+        });
+      }
+    };
 
     const chatRef = doc(db, "chats", chatId);
     const chatSnapshot = await getDoc(chatRef);
@@ -99,6 +114,9 @@ export const deleteMessage = async (
         messages: updatedMessages,
       });
     }
+
+    await lastMessageCheck(userId);
+    await lastMessageCheck(receiverId);
 
     return true;
   } catch (error) {
