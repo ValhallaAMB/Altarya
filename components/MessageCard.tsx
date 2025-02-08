@@ -7,9 +7,10 @@ type Props = {
   message: string;
   time: string;
   userId: string;
+  messageId: string;
 };
 
-const MessageCard = ({ senderId, message, time, userId }: Props) => {
+const MessageCard = ({ senderId, message, time, userId, messageId }: Props) => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const pressableRef = useRef<View | null>(null);
@@ -61,6 +62,7 @@ const MessageCard = ({ senderId, message, time, userId }: Props) => {
         closeOptions={closeOptions}
         modalPosition={modalPosition}
         popupType="Message"
+        messageId={messageId}
       />
     </>
   );

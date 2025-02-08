@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { listenToMessages, sendMessage } from "@/services/chatServices";
 import { useGlobalContext } from "@/context/GlobalContext";
@@ -56,6 +56,7 @@ const Chatroom = () => {
                 minute: "2-digit",
               })}
               userId={user?.uid || ""}
+              messageId={message._id}
             />
           ))}
         </View>

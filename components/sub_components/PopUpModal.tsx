@@ -3,6 +3,7 @@ import React from "react";
 import { deleteChatRoom } from "@/services/chatListServices";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { createChatRoomId } from "@/utils/common";
+import { deleteMessage } from "@/services/chatServices";
 
 type Props = {
   title: string;
@@ -10,6 +11,7 @@ type Props = {
   closeOptions: () => void;
   modalPosition: { top: number; left: number };
   popupType: "Message" | "ChatRoom";
+  messageId: string;
 };
 
 const PopupModal = ({
@@ -18,6 +20,7 @@ const PopupModal = ({
   closeOptions,
   modalPosition,
   popupType,
+  messageId,
 }: Props) => {
   const { user, receiverId } = useGlobalContext();
   const chatId =
@@ -27,6 +30,14 @@ const PopupModal = ({
     const res = await deleteChatRoom(chatId, user?.uid || "", receiverId || "");
     if (res) Alert.alert("Chat Room Deleted Successfully");
     else Alert.alert("Error Deleting Chat Room");
+    closeOptions();
+  };
+
+  const handleDeleteMessage = async () => {
+    const res = await deleteMessage(chatId, user?.uid || "", messageId);
+    if (res) Alert.alert("Chat Room Deleted Successfully");
+    else Alert.alert("Error Deleting Chat Room");
+    closeOptions();
   };
 
   return (
@@ -63,7 +74,7 @@ const PopupModal = ({
 
                 <View className="h-px bg-gray-700" />
 
-                <Pressable onPress={() => console.log("Delete Pressed")}>
+                <Pressable onPress={handleDeleteMessage}>
                   <Text className="text-red-600 py-2.5 text-start">Delete</Text>
                 </Pressable>
               </View>
