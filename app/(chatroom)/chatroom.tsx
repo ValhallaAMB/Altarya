@@ -5,6 +5,7 @@ import { useGlobalContext } from "@/context/GlobalContext";
 import { DocumentData } from "firebase/firestore";
 import { createChatRoomId } from "@/utils/common";
 import CustomKeyboard from "@/components/CustomKeyboard";
+import MessageCard from "@/components/MessageCard";
 
 const Chatroom = () => {
   const [text, setText] = useState("");
@@ -46,36 +47,16 @@ const Chatroom = () => {
       <ScrollView className="bg-[#262d36]" ref={scrollViewRef}>
         <View className="p-3 gap-2">
           {chats?.messages?.map((message: any, index: number) => (
-            <View
+            <MessageCard
               key={index}
-              className={`max-w-72 ${
-                message.senderId === user?.uid ? "self-end" : "self-start"
-              }`}
-            >
-              <View>
-                <Text
-                  className={`text-white text-[1.1rem] rounded-xl p-3 ${
-                    message.senderId === user?.uid
-                      ? "bg-[#94b781]"
-                      : "bg-[#4f514e]"
-                  }`}
-                >
-                  {message.text}
-                </Text>
-                <Text
-                  className={`text-white text-xs ${
-                    message.senderId === user?.uid
-                      ? "self-end pe-1"
-                      : "self-start ps-1"
-                  }`}
-                >
-                  {new Date(message.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text>
-              </View>
-            </View>
+              senderId={message.senderId}
+              message={message.text}
+              time={new Date(message.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              userId={user?.uid || ""}
+            />
           ))}
         </View>
       </ScrollView>

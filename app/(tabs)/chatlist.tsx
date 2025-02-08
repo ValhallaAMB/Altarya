@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MessageCard from "@/components/MessageCard";
+import ChatRoomCard from "@/components/ChatRoomCard";
 import CustomModal from "@/components/CustomModal";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { retrieveChatLists } from "@/services/chatListServices";
@@ -49,7 +49,7 @@ const ChatList = () => {
             </View>
           </View>
           {chats.map((chat) => (
-            <MessageCard
+            <ChatRoomCard
               key={chat.chatId}
               receiverId={chat.receiverId}
               title={chat.user.username}

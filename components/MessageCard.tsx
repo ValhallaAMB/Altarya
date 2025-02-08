@@ -1,26 +1,23 @@
-import { useGlobalContext } from "@/context/GlobalContext";
-import { router } from "expo-router";
-import React, { useState, useRef } from "react";
-import { View, Text, Pressable, Image, Modal } from "react-native";
+import { View, Text, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import PopUpModal from "./sub_components/PopUpModal";
 
 type Props = {
-  receiverId: string;
-  title: string;
+  senderId: string;
   message: string;
   time: string;
+  userId: string;
 };
 
-const MessageCard = ({ receiverId, title, message, time }: Props) => {
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+const MessageCard = ({ senderId, message, time, userId }: Props) => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const pressableRef = useRef<View | null>(null);
-  const { setChatroomParams } = useGlobalContext();
 
   const handleLongPress = () => {
     if (pressableRef.current) {
       pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
         // Save the top and left positions of the pressable
-        console.log("x:", x, "y:", y, "width:", width, "height:", height, "pageX:", pageX, "pageY:", pageY);
         setModalPosition({ top: pageY + height, left: pageX });
         setIsOptionsVisible(true);
       });
@@ -31,85 +28,38 @@ const MessageCard = ({ receiverId, title, message, time }: Props) => {
     setIsOptionsVisible(false);
   };
 
-  const toChatroom = () => {
-    // console.log("Pressable clicked:", receiverId, title);
-    setChatroomParams(receiverId, title);
-    router.push("/chatroom");
-  };
-
   return (
     <>
-      {/* Main Card */}
       <Pressable
-        className="flex-row items-center w-full py-2"
-        ref={pressableRef}
+        className={`max-w-72 ${
+          senderId === userId ? "self-end" : "self-start"
+        }`}
         onLongPress={handleLongPress}
-        onPress={toChatroom}
       >
-        <View className="h-16 w-16 p-1 ms-1">
-          <Image
-            source={require("../assets/images/defaultProfilePicture.jpg")}
-            className="w-[50px] h-[50px] rounded-full"
-          />
-        </View>
-
-        <View className="ms-4 flex-1">
-          <Text className="text-white text-base font-semibold capitalize">
-            {title}
-          </Text>
+        <View>
           <Text
-            className="text-gray-400 text-sm"
-            numberOfLines={1}
-            ellipsizeMode="tail"
+            className={`text-white text-[1.1rem] rounded-xl p-3 ${
+              senderId === userId ? "bg-[#94b781]" : "bg-[#4f514e]"
+            }`}
           >
             {message}
           </Text>
-        </View>
-
-        <View className="me-2">
-          <Text className="text-[#d5db95] text-base font-semibold px-4">
+          <Text
+            className={`text-white text-xs ${
+              senderId === userId ? "self-end pe-1" : "self-start ps-1"
+            }`}
+          >
             {time}
           </Text>
         </View>
       </Pressable>
 
-      {/* Modal for Dim Background */}
-      <Modal
-        transparent={true}
-        visible={isOptionsVisible}
-        animationType="fade"
-        onRequestClose={closeOptions}
-      >
-        {/* Dimmed Background */}
-        <Pressable onPress={closeOptions} className="bg-black/70 w-full h-full">
-          {/* Position modal relative to pressable */}
-          <View
-            style={{
-              position: "absolute",
-              top: modalPosition.top,
-              left: modalPosition.left,
-            }}
-          >
-            {/* Message bubble */}
-            <View className="bg-[#94b781] p-2.5 rounded-xl my-2">
-              <Text className="text-white text-lg">{title}</Text>
-            </View>
-
-            {/* List of Options */}
-            <View className="bg-[#262d36] rounded-xl p-2.5">
-              <Pressable onPress={() => console.log("Edit Pressed")}>
-                <Text className="text-white py-2.5 text-start">Edit</Text>
-              </Pressable>
-              <View className="h-px bg-gray-700" />
-              <Pressable onPress={() => console.log("Delete Pressed")}>
-                <Text className="text-red-600 py-2.5 text-start">Delete</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Pressable>
-      </Modal>
-
-      <View className="w-1/2 self-center border-b border-gray-400 rounded-full mt-1" />
+      <PopUpModal
+        title={message}
+        isOptionsVisible={isOptionsVisible}
+        closeOptions={closeOptions}
+        modalPosition={modalPosition}
+      />
     </>
   );
 };
