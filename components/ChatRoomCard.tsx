@@ -1,8 +1,8 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { router } from "expo-router";
 import React, { useState, useRef } from "react";
-import { View, Text, Pressable, Image, Modal } from "react-native";
-import PopUpModal from "./sub_components/PopUpModal";
+import { View, Text, Pressable, Image } from "react-native";
+import PopupModal from "./sub_components/PopupModal";
 
 type Props = {
   receiverId: string;
@@ -12,18 +12,19 @@ type Props = {
 };
 
 const ChatRoomCard = ({ receiverId, title, message, time }: Props) => {
-  const { setChatroomParams } = useGlobalContext();
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const pressableRef = useRef<View | null>(null);
+  const { setChatroomParams } = useGlobalContext();
 
-  const handleLongPress = () => {
+  const handleLongPress = () => { 
     if (pressableRef.current) {
       pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
         // Save the top and left positions of the pressable
         setModalPosition({ top: pageY + height, left: pageX });
         setIsOptionsVisible(true);
+        setChatroomParams(receiverId, title);
+        // console.log("Long Pressed:", receiverId, title);
       });
     }
   };
@@ -74,11 +75,12 @@ const ChatRoomCard = ({ receiverId, title, message, time }: Props) => {
         </View>
       </Pressable>
 
-      <PopUpModal
+      <PopupModal
         title={title}
         isOptionsVisible={isOptionsVisible}
         closeOptions={closeOptions}
         modalPosition={modalPosition}
+        popupType="ChatRoom"
       />
 
       <View className="w-1/2 self-center border-b border-gray-400 rounded-full mt-1" />

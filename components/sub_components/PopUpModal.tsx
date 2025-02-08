@@ -1,19 +1,34 @@
-import { View, Text, Modal, Pressable } from "react-native";
+import { View, Text, Modal, Pressable, Alert } from "react-native";
 import React from "react";
+import { deleteChatRoom } from "@/services/chatListServices";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { createChatRoomId } from "@/utils/common";
 
 type Props = {
   title: string;
   isOptionsVisible: boolean;
   closeOptions: () => void;
   modalPosition: { top: number; left: number };
+  popupType: "Message" | "ChatRoom";
 };
 
-const PopUpModal = ({
+const PopupModal = ({
   title,
   isOptionsVisible,
   closeOptions,
   modalPosition,
+  popupType,
 }: Props) => {
+  const { user, receiverId } = useGlobalContext();
+  const chatId =
+    user?.uid && receiverId ? createChatRoomId(user.uid, receiverId) : "";
+
+  const handleDeleteChatRoom = async () => {
+    const res = await deleteChatRoom(chatId, user?.uid || "", receiverId || "");
+    if (res) Alert.alert("Chat Room Deleted Successfully");
+    else Alert.alert("Error Deleting Chat Room");
+  };
+
   return (
     <>
       {/* Modal for Dim Background */}
@@ -32,25 +47,34 @@ const PopUpModal = ({
               top: modalPosition.top,
               left: modalPosition.left,
             }}
-            className="items-start"
+            className="items-start max-w-72"
           >
             {/* Message bubble */}
-            <View className="bg-[#94b781] p-2.5 rounded-xl my-2">
-              <Text className="text-white text-xl font-semibold">{title}</Text>
+            <View className="bg-[#94b781] p-2.5 rounded-xl mb-2 ">
+              <Text className="text-white text-lg">{title}</Text>
             </View>
 
             {/* List of Options */}
-            <View className="bg-[#262d36] rounded-xl p-2.5">
-              <Pressable onPress={() => console.log("Edit Pressed")}>
-                <Text className="text-white py-2.5 text-start">Edit</Text>
-              </Pressable>
+            {popupType === "Message" && (
+              <View className="bg-[#262d36] rounded-xl p-2.5">
+                <Pressable onPress={() => console.log("Edit Pressed")}>
+                  <Text className="text-white py-2.5 text-start">Edit</Text>
+                </Pressable>
 
-              <View className="h-px bg-gray-700" />
+                <View className="h-px bg-gray-700" />
 
-              <Pressable onPress={() => console.log("Delete Pressed")}>
-                <Text className="text-red-600 py-2.5 text-start">Delete</Text>
-              </Pressable>
-            </View>
+                <Pressable onPress={() => console.log("Delete Pressed")}>
+                  <Text className="text-red-600 py-2.5 text-start">Delete</Text>
+                </Pressable>
+              </View>
+            )}
+            {popupType === "ChatRoom" && (
+              <View className="bg-[#262d36] rounded-xl p-2.5">
+                <Pressable onPress={handleDeleteChatRoom}>
+                  <Text className="text-red-600 py-2.5 text-start">Delete</Text>
+                </Pressable>
+              </View>
+            )}
           </View>
         </Pressable>
       </Modal>
@@ -58,4 +82,4 @@ const PopUpModal = ({
   );
 };
 
-export default PopUpModal;
+export default PopupModal;

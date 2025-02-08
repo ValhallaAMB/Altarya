@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from "react-native";
 import React, { useRef, useState } from "react";
-import PopUpModal from "./sub_components/PopUpModal";
+import PopupModal from "./sub_components/PopupModal";
 
 type Props = {
   senderId: string;
@@ -34,6 +34,7 @@ const MessageCard = ({ senderId, message, time, userId }: Props) => {
         className={`max-w-72 ${
           senderId === userId ? "self-end" : "self-start"
         }`}
+        ref={pressableRef}
         onLongPress={handleLongPress}
       >
         <View>
@@ -54,11 +55,12 @@ const MessageCard = ({ senderId, message, time, userId }: Props) => {
         </View>
       </Pressable>
 
-      <PopUpModal
+      <PopupModal
         title={message}
         isOptionsVisible={isOptionsVisible}
         closeOptions={closeOptions}
         modalPosition={modalPosition}
+        popupType="Message"
       />
     </>
   );
