@@ -60,7 +60,7 @@ const Chatroom = () => {
 export default Chatroom;
 
 
-chatRoomServices.tsx
+chatServices.tsx
 
 import { arrayUnion, doc, DocumentData, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";

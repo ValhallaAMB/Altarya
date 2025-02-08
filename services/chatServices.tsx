@@ -1,46 +1,41 @@
-import { arrayUnion, doc, DocumentData, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/firebaseConfig";
-import { IMessage } from "react-native-gifted-chat";
+import uuid from "react-native-uuid";
 
 export const listenToMessages = (
   chatId: string,
   setChat: (messages: any) => void
-  // setMessages: (messages: IMessage[]) => void
 ) => {
   try {
     return onSnapshot(doc(db, "chats", chatId), async (res) => {
       setChat(res.data());
       // console.log("res", res.data());
     });
-
-    // return onSnapshot(doc(db, "chats", chatId), async (res) => {
-    //   const data = res.data();
-    //   if (data && data.messages) {
-    //     const formattedMessages = data.messages.map((msg: any) => ({
-    //       _id: msg.createdAt,
-    //       text: msg.text,
-    //       createdAt: new Date(msg.createdAt),
-    //       user: {
-    //         _id: msg.senderId,
-    //         name: msg.senderName || "User",
-    //         // avatar: msg.senderAvatar || "https://placeimg.com/140/140/any",
-    //       },
-    //     }));
-    //     setMessages(formattedMessages);
-    //   }
-    // });
   } catch (error) {
     console.log("Error listening to messages", error);
   }
 };
 
-export const sendMessage = async (chatId: string, userId: string, receiverId: string, text: string) => {
+export const sendMessage = async (
+  chatId: string,
+  userId: string,
+  receiverId: string,
+  text: string
+) => {
   try {
     await updateDoc(doc(db, "chats", chatId), {
       messages: arrayUnion({
+        _id: uuid.v4(),
         senderId: userId,
         text,
         createdAt: Date.now(),
+        isMessageDeleted: false,
       }),
     });
 
@@ -66,39 +61,75 @@ export const sendMessage = async (chatId: string, userId: string, receiverId: st
         });
       }
     });
-  // try {
-  //   await updateDoc(doc(db, "chats", chatId), {
-  //     messages: arrayUnion({
-  //       _id: message._id,
-  //       senderId: userId,
-  //       text: message.text,
-  //       createdAt:  Date.now(),
-  //       senderName: message.user.name,
-  //       // senderAvatar: message.user.avatar,
-  //     }),
-  //   });
-
-  //   const userIds = [userId, receiverId];
-
-  //   userIds.forEach(async (id) => {
-  //     const userChatsRef = doc(db, "userchatrooms", id);
-  //     const userChatsSnapshot = await getDoc(userChatsRef);
-
-  //     if (userChatsSnapshot.exists()) {
-  //       const userChatsData = userChatsSnapshot.data();
-  //       const chatIndex = userChatsData.chats.findIndex(
-  //         (chat: any) => chat.chatId === chatId
-  //       );
-
-  //       userChatsData.chats[chatIndex].lastMessage = message.text;
-  //       userChatsData.chats[chatIndex].updatedAt = Date.now();
-
-  //       await updateDoc(userChatsRef, {
-  //         chats: userChatsData.chats,
-  //       });
-  //     }
-  //   });
   } catch (error) {
     console.error(error);
   }
 };
+
+export const deleteMessage = async (
+  chatId: string,
+  userId: string,
+  messageId: string
+) => {
+  try {
+    // await updateDoc(doc(db, "chats", chatId), {
+    //   messages: arrayUnion({
+    //     messageId,
+    //     isMessageDeleted: true,
+    //     text: "This message has been deleted",
+    //   }),
+    // });
+
+    const chatRef = doc(db, "chats", chatId);
+    const chatSnapshot = await getDoc(chatRef);
+
+    if (chatSnapshot.exists()) {
+      const chatData = chatSnapshot.data();
+      const updatedMessages = chatData.messages.map((message: any) =>
+        message._id === messageId && message.senderId === userId
+          ? {
+              ...message,
+              text: "This message has been deleted",
+              isMessageDeleted: true,
+            }
+          : message
+      );
+
+      await updateDoc(chatRef, {
+        messages: updatedMessages,
+      });
+    }
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+// export const editMessage = async (
+//   chatId: string,
+//   messageId: string,
+//   userId: string,
+//   newText: string
+// ) => {
+//   try {
+//     const chatRef = doc(db, "chats", chatId);
+//     const chatSnapshot = await getDoc(chatRef);
+
+//     if (chatSnapshot.exists()) {
+//       const chatData = chatSnapshot.data();
+//       const updatedMessages = chatData.messages.map((message: any) =>
+//         message._id === messageId && message.senderId === userId
+//           ? { ...message, text: newText }
+//           : message
+//       );
+
+//       await updateDoc(chatRef, {
+//         messages: updatedMessages,
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
