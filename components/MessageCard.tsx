@@ -20,6 +20,7 @@ const MessageCard = ({ receiverId, title, message, time }: Props) => {
     if (pressableRef.current) {
       pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
         // Save the top and left positions of the pressable
+        console.log("x:", x, "y:", y, "width:", width, "height:", height, "pageX:", pageX, "pageY:", pageY);
         setModalPosition({ top: pageY + height, left: pageX });
         setIsOptionsVisible(true);
       });
