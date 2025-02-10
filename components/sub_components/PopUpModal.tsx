@@ -11,7 +11,7 @@ type Props = {
   closeOptions: () => void;
   modalPosition: { top: number; left: number };
   popupType: "Message" | "ChatRoom";
-  messageId: string;
+  messageId?: string;
 };
 
 const PopupModal = ({
@@ -26,6 +26,8 @@ const PopupModal = ({
   const chatId =
     user?.uid && receiverId ? createChatRoomId(user.uid, receiverId) : "";
 
+  // console.log("messageId", messageId);
+
   const handleDeleteChatRoom = async () => {
     const res = await deleteChatRoom(chatId, user?.uid || "", receiverId || "");
     if (res) Alert.alert("Chat Room Deleted Successfully");
@@ -38,10 +40,10 @@ const PopupModal = ({
       chatId,
       user?.uid || "",
       receiverId || "",
-      messageId
+      messageId || ""
     );
     if (res) Alert.alert("Message Deleted Successfully");
-    else Alert.alert("Error Deleting Message");
+    else Alert.alert("Unauthorized to Delete the Message");
     closeOptions();
   };
 
@@ -71,7 +73,7 @@ const PopupModal = ({
             </View>
 
             {/* List of Options */}
-            {popupType === "Message" && (
+            {/* {popupType === "Message" && (
               <View className="bg-[#262d36] rounded-xl p-2.5">
                 <Pressable onPress={() => console.log("Edit Pressed")}>
                   <Text className="text-white py-2.5 text-start">Edit</Text>
@@ -90,7 +92,18 @@ const PopupModal = ({
                   <Text className="text-red-600 py-2.5 text-start">Delete</Text>
                 </Pressable>
               </View>
-            )}
+            )} */}
+            <View className="bg-[#262d36] rounded-xl p-2.5">
+              <Pressable
+                onPress={
+                  popupType === "ChatRoom"
+                    ? handleDeleteChatRoom
+                    : handleDeleteMessage
+                }
+              >
+                <Text className="text-red-600 py-2.5 text-start">Delete</Text>
+              </Pressable>
+            </View>
           </View>
         </Pressable>
       </Modal>

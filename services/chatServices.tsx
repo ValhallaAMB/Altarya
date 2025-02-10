@@ -7,6 +7,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import uuid from "react-native-uuid";
+import { User } from "firebase/auth";
 
 export const listenToMessages = (
   chatId: string,
@@ -24,23 +25,25 @@ export const listenToMessages = (
 
 export const sendMessage = async (
   chatId: string,
-  userId: string,
+  user: User,
   receiverId: string,
   text: string
 ) => {
-  const _id = uuid.v4();
   try {
+    const _id = uuid.v4();
+
     await updateDoc(doc(db, "chats", chatId), {
       messages: arrayUnion({
         _id,
-        senderId: userId,
+        senderId: user?.uid,
+        senderName: user?.displayName,
         text,
         createdAt: Date.now(),
         isMessageDeleted: false,
       }),
     });
 
-    const userIds = [userId, receiverId];
+    const userIds = [user?.uid, receiverId];
 
     userIds.forEach(async (id) => {
       const userChatsRef = doc(db, "userchatrooms", id);
@@ -54,8 +57,6 @@ export const sendMessage = async (
 
         userChatsData.chats[chatIndex].lastMessage = text;
         userChatsData.chats[chatIndex].messageId = _id;
-        // userChatsData.chats[chatIndex].isSeen =
-        //   id === userId ? true : false;
         userChatsData.chats[chatIndex].updatedAt = Date.now();
 
         await updateDoc(userChatsRef, {
@@ -95,25 +96,29 @@ export const deleteMessage = async (
       }
     };
 
+    let isUserValid = true;
     const chatRef = doc(db, "chats", chatId);
     const chatSnapshot = await getDoc(chatRef);
 
     if (chatSnapshot.exists()) {
       const chatData = chatSnapshot.data();
-      const updatedMessages = chatData.messages.map((message: any) =>
-        message._id === messageId && message.senderId === userId
-          ? {
-              ...message,
-              text: "This message has been deleted",
-              isMessageDeleted: true,
-            }
-          : message
-      );
+      const updatedMessages = chatData.messages.map((message: any) => {
+        if (message._id === messageId && message.senderId === userId) {
+          return {
+            ...message,
+            text: "This message has been deleted",
+            isMessageDeleted: true,
+          };
+        }
+        isUserValid = false;
+        return message;
+      });
 
       await updateDoc(chatRef, {
         messages: updatedMessages,
       });
     }
+    if (!isUserValid) return false;
 
     await lastMessageCheck(userId);
     await lastMessageCheck(receiverId);

@@ -20,7 +20,7 @@ export const searchUser = async (username: string) => {
 
     if (!querySnapshot.empty) {
       const user = querySnapshot.docs[0].data();
-      console.log("User found", user);
+      // console.log("User found", user);
       return user;
     }
   } catch (error) {

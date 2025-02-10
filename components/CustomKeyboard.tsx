@@ -26,9 +26,9 @@ const CustomKeyboard = ({
         keyboardVerticalOffset={98}
         className="pt-3"
       >
-        <View className="flex-row max-h-[100px] px-3 gap-x-3">
+        <View className="flex-row max-h-24 px-3 gap-x-3">
           <TextInput
-            className="flex-1 px-4 pb-3 text-white text-lg rounded-2xl border-2 border-[#bac0b6]"
+            className="flex-1 px-4 py-1 text-white text-lg rounded-2xl border-2 border-[#bac0b6]"
             multiline
             value={text}
             placeholder={"Type a message..."}

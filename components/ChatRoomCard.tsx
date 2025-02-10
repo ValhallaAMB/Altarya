@@ -17,7 +17,7 @@ const ChatRoomCard = ({ receiverId, title, message, time }: Props) => {
   const pressableRef = useRef<View | null>(null);
   const { setChatroomParams } = useGlobalContext();
 
-  const handleLongPress = () => { 
+  const handleLongPress = () => {
     if (pressableRef.current) {
       pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
         // Save the top and left positions of the pressable

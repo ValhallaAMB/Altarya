@@ -37,8 +37,8 @@ const Chatroom = () => {
   }, [chats]);
 
   const handleSendMessage = (text: string) => {
-    if (text.trim() === "") return;
-    sendMessage(chatId, user?.uid || "", receiverId || "", text);
+    if (text.trim() === "" || !user) return;
+    sendMessage(chatId, user, receiverId || "", text.trim());
     setText("");
   };
 
@@ -50,7 +50,7 @@ const Chatroom = () => {
             <MessageCard
               key={index}
               senderId={message.senderId}
-              message={message.text}
+              message={message.text.trim()}
               time={new Date(message.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",

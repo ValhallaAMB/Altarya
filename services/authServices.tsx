@@ -3,12 +3,12 @@ import {
   signInWithEmailAndPassword,
   // onAuthStateChanged,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "@/firebaseConfig";
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   query,
   setDoc,
@@ -51,20 +51,26 @@ CreateUserProps): Promise<{ success: boolean; msg?: any }> => {
     } else if (!querySnapshot.empty)
       return { success: false, msg: "User already exists" };
 
-    const userCredential = await createUserWithEmailAndPassword(
+    const userCredentials = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    // Signed up
-    await setDoc(doc(db, "users", userCredential.user.uid), {
-      username,
-      // profileURL,
-      userId: userCredential.user.uid,
+    await updateProfile(userCredentials.user, {
+      displayName: username,
+      // photoURL: "",
     });
 
-    await setDoc(doc(db, "userchatrooms", userCredential.user.uid), {
+    // Signed up
+    await setDoc(doc(db, "users", userCredentials.user.uid), {
+      userId: userCredentials.user.uid,
+      username,
+      email,
+      // profileURL,
+    });
+
+    await setDoc(doc(db, "userchatrooms", userCredentials.user.uid), {
       chats: [],
     });
 
