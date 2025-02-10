@@ -18,13 +18,15 @@
    - Make sure you include ANDROID_HOME (Common path: `C:\Users\USERNAME\AppData\Local\Android\Sdk`) & JAVA_HOME (Common path: `C:\Program Files\Java\jdk-23d`) in your environment variables
    - Add a path in your environment variables (Common path: `C:\Users\USERNAME\AppData\Local\Android\Sdk\platform-tools`)
 
-3. Run
+3. Rename `firebaseConfigExample.js` to `firebaseConfig.js` and place your firebase config there. Open the file for extra information.
+
+4. Run
 
    ```bash
     npx expo run:android
    ```
 
-4. Start the app with Expo Go (Some features will not work)
+5. Start the app with Expo Go (Some features will not work)
 
    ```bash
     npx expo start

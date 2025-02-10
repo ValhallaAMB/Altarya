@@ -10,7 +10,7 @@ type Props = {
   isOptionsVisible: boolean;
   closeOptions: () => void;
   modalPosition: { top: number; left: number };
-  popupType: "Message" | "ChatRoom";
+  popupType: "Message" | "ChatRoom"; 
   messageId?: string;
 };
 
