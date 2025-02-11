@@ -1,8 +1,10 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { router } from "expo-router";
-import React, { useState, useRef } from "react";
-import { View, Text, Pressable, Image } from "react-native";
-import PopupModal from "./sub_components/PopupModal";
+import React from "react";
+import { View, Text, Pressable, Image, Alert } from "react-native";
+import * as ContextMenu from "zeego/context-menu";
+import { createChatRoomId } from "@/utils/common";
+import { deleteChatRoom } from "@/services/chatListServices";
 
 type Props = {
   receiverId: string;
@@ -12,25 +14,16 @@ type Props = {
 };
 
 const ChatRoomCard = ({ receiverId, title, message, time }: Props) => {
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const pressableRef = useRef<View | null>(null);
-  const { setChatroomParams } = useGlobalContext();
+  const { setChatroomParams, user } = useGlobalContext();
+  const chatId =
+    user?.uid && receiverId ? createChatRoomId(user.uid, receiverId) : "";
 
-  const handleLongPress = () => {
-    if (pressableRef.current) {
-      pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
-        // Save the top and left positions of the pressable
-        setModalPosition({ top: pageY + height, left: pageX });
-        setIsOptionsVisible(true);
-        setChatroomParams(receiverId, title);
-        // console.log("Long Pressed:", receiverId, title);
-      });
-    }
-  };
+  // console.log("messageId", messageId);
 
-  const closeOptions = () => {
-    setIsOptionsVisible(false);
+  const handleDeleteChatRoom = async () => {
+    const res = await deleteChatRoom(chatId, user?.uid || "", receiverId || "");
+    if (res) Alert.alert("Chat Room Deleted Successfully");
+    else Alert.alert("Error Deleting Chat Room");
   };
 
   const toChatroom = () => {
@@ -41,47 +34,48 @@ const ChatRoomCard = ({ receiverId, title, message, time }: Props) => {
 
   return (
     <>
-      {/* Main Card */}
-      <Pressable
-        className="flex-row items-center w-full py-2"
-        ref={pressableRef}
-        onLongPress={handleLongPress}
-        onPress={toChatroom}
-      >
-        <View className="h-16 w-16 p-1 ms-1">
-          <Image
-            source={require("../assets/images/defaultProfilePicture.jpg")}
-            className="w-[50px] h-[50px] rounded-full"
-          />
-        </View>
-
-        <View className="ms-4 flex-1">
-          <Text className="text-white text-base font-semibold capitalize">
-            {title}
-          </Text>
-          <Text
-            className="text-gray-400 text-sm"
-            numberOfLines={1}
-            ellipsizeMode="tail"
+      <ContextMenu.Root>
+        <ContextMenu.Trigger>
+          {/* Main Card */}
+          <Pressable
+            className="flex-row items-center w-full py-2"
+            // ref={pressableRef}
+            onLongPress={() => {}}
+            onPress={toChatroom}
           >
-            {message}
-          </Text>
-        </View>
+            <View className="h-16 w-16 p-1 ms-1">
+              <Image
+                source={require("../assets/images/defaultProfilePicture.jpg")}
+                className="w-[50px] h-[50px] rounded-full"
+              />
+            </View>
 
-        <View className="me-2">
-          <Text className="text-[#d5db95] text-base font-semibold px-4">
-            {time}
-          </Text>
-        </View>
-      </Pressable>
+            <View className="ms-4 flex-1">
+              <Text className="text-white text-base font-semibold capitalize">
+                {title}
+              </Text>
+              <Text
+                className="text-gray-400 text-sm"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {message}
+              </Text>
+            </View>
 
-      <PopupModal
-        title={title}
-        isOptionsVisible={isOptionsVisible}
-        closeOptions={closeOptions}
-        modalPosition={modalPosition}
-        popupType="ChatRoom"
-      />
+            <View className="me-2">
+              <Text className="text-[#d5db95] text-base font-semibold px-4">
+                {time}
+              </Text>
+            </View>
+          </Pressable>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item key="delete" onSelect={handleDeleteChatRoom}>
+            Delete
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
 
       <View className="w-1/2 self-center border-b border-gray-400 rounded-full mt-1" />
     </>

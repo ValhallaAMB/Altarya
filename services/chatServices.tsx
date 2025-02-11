@@ -75,7 +75,12 @@ export const deleteMessage = async (
   receiverId: string,
   messageId: string
 ) => {
+  let isUserValid = false;
+
   try {
+    const chatRef = doc(db, "chats", chatId);
+    const chatSnapshot = await getDoc(chatRef);
+
     const lastMessageCheck = async (userId: string) => {
       const userChatsRef = doc(db, "userchatrooms", userId);
       const userChatsSnapshot = await getDoc(userChatsRef);
@@ -96,21 +101,17 @@ export const deleteMessage = async (
       }
     };
 
-    let isUserValid = true;
-    const chatRef = doc(db, "chats", chatId);
-    const chatSnapshot = await getDoc(chatRef);
-
     if (chatSnapshot.exists()) {
       const chatData = chatSnapshot.data();
       const updatedMessages = chatData.messages.map((message: any) => {
         if (message._id === messageId && message.senderId === userId) {
+          isUserValid = true;
           return {
             ...message,
             text: "This message has been deleted",
             isMessageDeleted: true,
           };
         }
-        isUserValid = false;
         return message;
       });
 
@@ -118,15 +119,15 @@ export const deleteMessage = async (
         messages: updatedMessages,
       });
     }
-    if (!isUserValid) return false;
+    if (!isUserValid) return (isUserValid = false);
 
     await lastMessageCheck(userId);
     await lastMessageCheck(receiverId);
 
-    return true;
+    return isUserValid;
   } catch (error) {
     console.error(error);
-    return false;
+    return isUserValid;
   }
 };
 

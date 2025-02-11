@@ -1,6 +1,9 @@
-import { View, Text, Pressable } from "react-native";
-import React, { useRef, useState } from "react";
-import PopupModal from "./sub_components/PopupModal";
+import { View, Text, Pressable, Alert } from "react-native";
+import React from "react";
+import { deleteMessage } from "@/services/chatServices";
+import { useGlobalContext } from "@/context/GlobalContext";
+import { createChatRoomId } from "@/utils/common";
+import * as ContextMenu from "zeego/context-menu";
 
 type Props = {
   senderId: string;
@@ -11,59 +14,55 @@ type Props = {
 };
 
 const MessageCard = ({ senderId, message, time, userId, messageId }: Props) => {
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const pressableRef = useRef<View | null>(null);
+  const { user, receiverId } = useGlobalContext();
+  const chatId =
+    user?.uid && receiverId ? createChatRoomId(user.uid, receiverId) : "";
 
-  const handleLongPress = () => {
-    if (pressableRef.current) {
-      pressableRef.current.measure((x, y, width, height, pageX, pageY) => {
-        // Save the top and left positions of the pressable
-        setModalPosition({ top: pageY + height, left: pageX });
-        setIsOptionsVisible(true);
-      });
-    }
-  };
-
-  const closeOptions = () => {
-    setIsOptionsVisible(false);
+  const handleDeleteMessage = async () => {
+    const res = await deleteMessage(
+      chatId,
+      user?.uid || "",
+      receiverId || "",
+      messageId || ""
+    );
+    if (res) Alert.alert("Message Deleted Successfully");
+    else Alert.alert("Unauthorized to Delete the Message");
   };
 
   return (
     <>
-      <Pressable
-        className={`max-w-72 ${
-          senderId === userId ? "self-end" : "self-start"
-        }`}
-        ref={pressableRef}
-        onLongPress={handleLongPress}
-      >
-        <View>
-          <Text
-            className={`text-white text-[1.1rem] rounded-xl p-3 ${
-              senderId === userId ? "bg-[#94b781]" : "bg-[#4f514e]"
+      <ContextMenu.Root>
+        <ContextMenu.Trigger>
+          <Pressable
+            className={`max-w-72 ${
+              senderId === userId ? "self-end" : "self-start"
             }`}
+            onLongPress={() => {}}
           >
-            {message}
-          </Text>
-          <Text
-            className={`text-white text-xs ${
-              senderId === userId ? "self-end pe-1" : "self-start ps-1"
-            }`}
-          >
-            {time}
-          </Text>
-        </View>
-      </Pressable>
-
-      <PopupModal
-        title={message}
-        isOptionsVisible={isOptionsVisible}
-        closeOptions={closeOptions}
-        modalPosition={modalPosition}
-        popupType="Message"
-        messageId={messageId}
-      />
+            <View>
+              <Text
+                className={`text-white text-[1.1rem] rounded-xl p-3 ${
+                  senderId === userId ? "bg-[#94b781]" : "bg-[#4f514e]"
+                }`}
+              >
+                {message}
+              </Text>
+              <Text
+                className={`text-white text-xs ${
+                  senderId === userId ? "self-end pe-1" : "self-start ps-1"
+                }`}
+              >
+                {time}
+              </Text>
+            </View>
+          </Pressable>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item key="delete" onSelect={handleDeleteMessage}>
+            Delete
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Root>
     </>
   );
 };

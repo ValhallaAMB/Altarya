@@ -24,6 +24,7 @@
 
    ```bash
     npx expo run:android
+    npx expo run:ios
    ```
 
 5. Start the app with Expo Go (Some features will not work)
