@@ -16,7 +16,7 @@ const ChatList = () => {
     let unSub: (() => void) | undefined; 
 
     const fetchData = async () => {
-      unSub = await retrieveChatLists(user, setChats);
+      unSub = await retrieveChatLists(user, setChats); 
     };
 
     fetchData();
@@ -52,7 +52,7 @@ const ChatList = () => {
             <ChatRoomCard
               key={chat.chatId}
               receiverId={chat.receiverId}
-              title={chat.user.username}
+              title={chat.user?.username ?? "Removed User"}
               message={chat.lastMessage}
               time={new Date(chat.updatedAt).toLocaleTimeString([], {
                 hour: "2-digit",

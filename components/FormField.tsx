@@ -48,10 +48,10 @@ const FormField = ({
           autoCapitalize={autoCapitalize}
           onChangeText={handleChangeText}
           placeholderTextColor={"#8c8c8c"}
-          secureTextEntry={title === "Password" && !showPassword}
+          secureTextEntry={title.includes("Password") && !showPassword}
         />
 
-        {title === "Password" && (
+        {title.includes("Password") && (
           <Ionicons
             name={showPassword ? "eye-off" : "eye"}
             size={24}

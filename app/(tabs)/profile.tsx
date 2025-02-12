@@ -1,88 +1,78 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Text, SafeAreaView, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-// import * as ImagePicker from 'expo-image-picker'
 import CustomButton from "@/components/CustomButton";
 import FormField from "@/components/FormField";
-import { logOut } from "@/services/authServices";
-
-// const defualtProfileImage = require('../../assets/images/defaultProfilePicture.jpg');
-
-const logOutHandler = async () => {
-  await logOut();
-};
+import {
+  deleteAccount,
+  logOut,
+  updateAccount,
+} from "@/services/profileServices";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 const Profile = () => {
-  //undefined if the user does not select an image
-  // const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const { user } = useGlobalContext();
+  const [username, setUsername] = useState(user?.displayName ?? "");
+  const [email, setEmail] = useState(user?.email ?? "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
-  // const pickImageAsync = async () => {
-  //   // Request permission to access the device's media library
-  //   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //   if (permissionResult.granted === false) {
-  //     alert("Permission to access media library is required.");
-  //     return;
-  //   }
+  // console.log("user", user?.email);
+  // console.log("username", user?.displayName);
 
-  //   const result = await ImagePicker.launchImageLibraryAsync({
-  //     allowsEditing: true,
-  //     quality: 1,
-  //   });
+  const resetInputFields = () => {
+    setUsername(user?.displayName ?? "");
+    setEmail(user?.email ?? "");
+    setCurrentPassword("");
+    setNewPassword("");
+  };
 
-  //   if (!result.canceled) {
-  //     setSelectedImage(result.assets[0].uri);
-  //     console.log(result);
-  //   } else {
-  //     alert("You did not select an image.");
-  //     console.log(result);
-  //   }
-  // };
+  const handleUpdateProfile = async () => {
+    if (!user || !username || !email || !currentPassword) {
+      resetInputFields();
+      return Alert.alert(
+        "Fill in the required fields. \nCurrent password must be provided \nto update profile."
+      );
+    }
+    const res = await updateAccount(
+      user,
+      username,
+      email,
+      currentPassword,
+      newPassword
+    );
+
+    if (res.success) {
+      resetInputFields();
+      Alert.alert("Profile updated successfully");
+    } else {
+      Alert.alert("Error updating profile", res.msg);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    // Delete account logic
+    if (user) await deleteAccount(user);
+  };
+
+  const logOutHandler = async () => {
+    await logOut();
+  };
 
   return (
     <SafeAreaView className="bg-[#001220] h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
-        <View className="items-center justify-top w-full px-4 mt-10 ">
-          <Text className="text-3xl font-bold text-[#d5db95]">
-            Edit Profile
-          </Text>
-          <Text className="text-lg font-regular text-white mt-2 mb-6 align-center">
-            Edit your profile details
-          </Text>
-        </View>
-
-        {/* <View className="align-center items-center justify-center">
-          <Image
-            source={selectedImage ? { uri: selectedImage } : defualtProfileImage}
-            className="w-[100px] h-[100px] mt-6 rounded-full"
-          />
-
-          {/* <TouchableOpacity onPress={pickImageAsync}>
-            <Text className="text-white py-2 px-4">Edit</Text>
-          </TouchableOpacity> */}
-        {/*}
-          <CustomButton
-            title={'Edit'}
-            handlePress={pickImageAsync}
-            isLoading={false}
-            textStyle="text-white text-md"
-            containerStyle="mt-5 py-1 px-4 bg-transparent"
-          />
-        </View> */}
+        <Text className="text-4xl font-bold text-[#d5db95] text-center mt-12">
+          Edit Profile
+        </Text>
+        <Text className="text-lg font-regular text-white mt-2 text-center">
+          Edit your profile details
+        </Text>
 
         <FormField
           title={"Username"}
           value={username}
           handleChangeText={(newUsername) => setUsername(newUsername)}
-          extraStyles="mx-5 my-3 mt-10"
+          extraStyles="mx-5 my-3"
         />
 
         <FormField
@@ -92,49 +82,45 @@ const Profile = () => {
           extraStyles="mx-5 my-3"
         />
 
-        <View>
-          <CustomButton
-            title={"Save"}
-            handlePress={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-            // isLoading={false}
-            textStyle="text-white text-md"
-            containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
-          />
-        </View>
+        <FormField
+          title={"Current Password"}
+          value={currentPassword}
+          handleChangeText={(currentPassword) =>
+            setCurrentPassword(currentPassword)
+          }
+          extraStyles="mx-5 my-3"
+        />
 
-        <View>
-          <CustomButton
-            title={"Sign Out"}
-            handlePress={logOutHandler}
-            // isLoading={false}
-            textStyle="text-black text-md"
-            containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
-          />
-        </View>
+        <FormField
+          title={"New Password"}
+          value={newPassword}
+          handleChangeText={(newPassword) => setNewPassword(newPassword)}
+          extraStyles="mx-5 my-3"
+        />
 
-        {/* <View className="items-left justify-top px-4 mt-2  mx-4">
+        <CustomButton
+          title={"Update Profile"}
+          handlePress={handleUpdateProfile}
+          // isLoading={false}
+          textStyle="text-black text-md"
+          containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
+        />
 
-          <TextInput
-            className="bg-white text-black mt-10 py-3 px-2 rounded-2xl"
-            autoCorrect={false}
-            autoCapitalize="none"
-            value={username}
-            onChangeText={(newUsername) => setUsername(newUsername)}
-          
-          />
+        <CustomButton
+          title={"Sign Out"}
+          handlePress={logOutHandler}
+          // isLoading={false}
+          textStyle="text-black text-md"
+          containerStyle="mt-10 mx-5 py-[10px] bg-[#d5db95]"
+        />
 
-          <TextInput
-            className="bg-white text-black my-10 py-3 px-2 rounded-2xl"
-            autoCorrect={false}
-            autoCapitalize="none"
-            value={email}
-            onChangeText={(newEmail) => setEmail(newEmail)}
-          
-          />
-      
-        </View> */}
+        <CustomButton
+          title={"Delete Account"}
+          handlePress={handleDeleteAccount}
+          // isLoading={false}
+          textStyle="text-white text-md"
+          containerStyle="mt-10 mx-5 py-[10px] bg-red-500"
+        />
       </ScrollView>
     </SafeAreaView>
   );

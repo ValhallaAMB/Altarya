@@ -102,15 +102,3 @@ export const logIn = async ({
     return { success: false, msg };
   }
 };
-
-export const logOut = async (): Promise<void> => {
-  await signOut(auth)
-    .then(() => {
-      // Signed out
-      console.log("Signed out");
-    })
-    .catch((error) => {
-      // An error happened.
-      console.log("Error signing out", error.code, error.message);
-    });
-};
