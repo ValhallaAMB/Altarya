@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View, Text, Pressable } from "react-native";
@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useGlobalContext } from "@/context/GlobalContext";
 
 const ChatroomLayout = () => {
-  const { receiverUsername, receiverId } = useGlobalContext();
+  const { receiverUsername } = useGlobalContext();
 
   return (
     <>
@@ -36,7 +36,7 @@ const ChatroomLayout = () => {
             headerTitle: () => (
               <View>
                 <Text className="text-xl font-bold text-gray-50">
-                  {receiverUsername} 
+                  {receiverUsername}
                 </Text>
               </View>
             ),

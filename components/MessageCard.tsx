@@ -1,9 +1,10 @@
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React from "react";
 import { deleteMessage } from "@/services/chatServices";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { createChatRoomId } from "@/utils/common";
 import * as ContextMenu from "zeego/context-menu";
+// import { remapProps } from "nativewind";
 
 type Props = {
   senderId: string;
@@ -29,15 +30,17 @@ const MessageCard = ({ senderId, message, time, userId, messageId }: Props) => {
     else Alert.alert("Unauthorized to Delete the Message");
   };
 
+  // Style components that don't accept className prop
+  // remapProps(MenuOption, { className: "style" });
+
   return (
     <>
       <ContextMenu.Root>
         <ContextMenu.Trigger>
-          <Pressable
+          <View
             className={`max-w-72 ${
               senderId === userId ? "self-end" : "self-start"
             }`}
-            onLongPress={() => {}}
           >
             <View>
               <Text
@@ -55,8 +58,8 @@ const MessageCard = ({ senderId, message, time, userId, messageId }: Props) => {
                 {time}
               </Text>
             </View>
-          </Pressable>
-        </ContextMenu.Trigger>
+          </View>
+      </ContextMenu.Trigger>
         <ContextMenu.Content>
           <ContextMenu.Item key="delete" onSelect={handleDeleteMessage}>
             Delete
